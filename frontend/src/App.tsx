@@ -11,7 +11,7 @@ const LEFT_WIDTH  = 220;
 const RIGHT_WIDTH = 280;
 
 export default function App() {
-  const { property } = useMapStore();
+  const { property, isLoading } = useMapStore();
   const { getCurrentPosition } = useGeolocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -27,6 +27,8 @@ export default function App() {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden" style={{ background: 'var(--pm-void)' }}>
+      {/* ── Global Top Progress Bar ── */}
+      {isLoading && <div className="pm-top-progress" />}
 
       {/* ── Left Sidebar — lista de propriedades ── */}
       <Sidebar open={sidebarOpen} width={LEFT_WIDTH} side="left">

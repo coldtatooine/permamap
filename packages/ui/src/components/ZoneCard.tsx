@@ -1,6 +1,5 @@
 import React from 'react';
 import { zone, type ZoneNumber } from '../tokens/colors';
-import { ZoneBadge } from './Badge';
 
 // =====================
 // ZoneCard — item de zona na sidebar
@@ -15,6 +14,7 @@ export interface ZoneCardProps {
   elementCount?: number;
   areaHa?:       number;
   onClick?:      () => void;
+  onEdit?:       (e: React.MouseEvent) => void;
   onDelete?:     (e: React.MouseEvent) => void;
 }
 
@@ -26,6 +26,7 @@ export function ZoneCard({
   elementCount,
   areaHa,
   onClick,
+  onEdit,
   onDelete,
 }: ZoneCardProps) {
   const zoneColor = zone[zoneNumber];
@@ -55,29 +56,24 @@ export function ZoneCard({
       aria-pressed={active}
       onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
     >
-      {/* Número ghost decorativo */}
-      <span
-        aria-hidden
-        style={{
-          position:      'absolute',
-          right:         '12px',
-          top:           '50%',
-          transform:     'translateY(-50%)',
-          fontFamily:    'var(--font-display)',
-          fontSize:      '2.75rem',
-          fontWeight:    700,
-          lineHeight:    1,
-          pointerEvents: 'none',
-          userSelect:    'none',
-          color:         zoneColor,
-          opacity:       0.07,
-        }}
-      >
-        {zoneNumber}
-      </span>
-
-      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <ZoneBadge zoneNumber={zoneNumber} size="md" />
+      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '14px' }}>
+        {/* Número em destaque (antigo ghost number) */}
+        <span
+          aria-hidden
+          style={{
+            fontFamily:    'var(--font-display)',
+            fontSize:      '2.75rem',
+            fontWeight:    800,
+            lineHeight:    1,
+            pointerEvents: 'none',
+            userSelect:    'none',
+            color:         zoneColor,
+            opacity:       0.8,
+            textShadow:    `0 2px 10px ${zoneColor}40`,
+          }}
+        >
+          {zoneNumber}
+        </span>
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{
@@ -104,35 +100,65 @@ export function ZoneCard({
           </p>
         </div>
 
-        {onDelete && (
-          <button
-            className="pm-delete-btn"
-            onClick={(e) => { e.stopPropagation(); onDelete(e); }}
-            aria-label={`Excluir ${name}`}
-            style={{
-              background:  'none',
-              border:      'none',
-              cursor:      'pointer',
-              padding:     '5px',
-              borderRadius: '5px',
-              color:       'var(--var-text-3)',
-              display:     'flex',
-              alignItems:  'center',
-              flexShrink:  0,
-              transition:  'color 0.15s ease',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--pm-danger)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '')}
-          >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="3 6 5 6 21 6"/>
-              <path d="M19 6l-1 14H6L5 6"/>
-              <path d="M10 11v6M14 11v6"/>
-              <path d="M9 6V4h6v2"/>
-            </svg>
-          </button>
-        )}
+        <div style={{ display: 'flex', gap: '4px' }}>
+          {onEdit && (
+            <button
+              className="pm-edit-btn"
+              onClick={(e) => { e.stopPropagation(); onEdit(e); }}
+              aria-label={`Editar ${name}`}
+              style={{
+                background:  'none',
+                border:      'none',
+                cursor:      'pointer',
+                padding:     '5px',
+                borderRadius: '5px',
+                color:       'var(--pm-text-3)',
+                display:     'flex',
+                alignItems:  'center',
+                flexShrink:  0,
+                transition:  'color 0.15s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--pm-primary)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--pm-text-3)')}
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </button>
+          )}
+
+          {onDelete && (
+            <button
+              className="pm-delete-btn"
+              onClick={(e) => { e.stopPropagation(); onDelete(e); }}
+              aria-label={`Excluir ${name}`}
+              style={{
+                background:  'none',
+                border:      'none',
+                cursor:      'pointer',
+                padding:     '5px',
+                borderRadius: '5px',
+                color:       'var(--pm-text-3)',
+                display:     'flex',
+                alignItems:  'center',
+                flexShrink:  0,
+                transition:  'color 0.15s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--pm-danger)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--pm-text-3)')}
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14H6L5 6"/>
+                <path d="M10 11v6M14 11v6"/>
+                <path d="M9 6V4h6v2"/>
+              </svg>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

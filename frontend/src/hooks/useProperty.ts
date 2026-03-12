@@ -111,6 +111,19 @@ export function useProperty() {
     }
   }
 
+  async function deleteZone(id: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      // Elements are deleted via ON DELETE CASCADE on the database, but we must update the store
+      const res = await supabase.from('zones').delete().eq('id', id);
+      if (res.error) throw res.error;
+      useMapStore.getState().removeZone(id);
+      return { success: true };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao excluir zona.';
+      return { success: false, error: msg };
+    }
+  }
+
   async function updateElement(
     id: string,
     updates: { zone_id?: string; metadata_json?: import('../types').ElementMetadata },
@@ -127,6 +140,26 @@ export function useProperty() {
       return { success: true };
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Erro ao atualizar elemento.';
+      return { success: false, error: msg };
+    }
+  }
+
+  async function updateZone(
+    id: string,
+    updates: { name?: string; zone_number?: import('../types').ZoneNumber; color?: string },
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const res = await supabase
+        .from('zones')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+      if (res.error) throw res.error;
+      useMapStore.getState().updateZone(id, updates);
+      return { success: true };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao atualizar zona.';
       return { success: false, error: msg };
     }
   }
@@ -175,5 +208,5 @@ export function useProperty() {
     return created;
   }
 
-  return { loadProperty, saveProperty, createProperty, deleteProperty, deleteElement, updateElement, listProperties, property };
+  return { loadProperty, saveProperty, createProperty, deleteProperty, deleteZone, deleteElement, updateZone, updateElement, listProperties, property };
 }

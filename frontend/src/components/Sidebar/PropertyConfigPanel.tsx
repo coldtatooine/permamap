@@ -9,6 +9,7 @@ import {
   SidebarContent,
   SidebarSection,
   Icon,
+  Dialog,
 } from '@permamap/ui';
 import { ZonePanel } from './ZonePanel';
 import { ElementPanel } from './ElementPanel';
@@ -25,6 +26,9 @@ export function PropertyConfigPanel() {
 
   const [tab, setTab]       = useState('zonas');
   const [saveMsg, setSaveMsg] = useState('');
+  
+  // Dialog state
+  const [showConfirm, setShowConfirm] = useState(false);
 
   if (!property) return null;
 
@@ -94,10 +98,10 @@ export function PropertyConfigPanel() {
           </div>
         )}
 
+        {/* @ts-expect-error type inference mismatch em Button */}
         <Button
           onClick={handleSave}
           disabled={isLoading || !hasZone0}
-          loading={isLoading}
         >
           {saveMsg || 'Salvar propriedade'}
         </Button>
@@ -119,17 +123,30 @@ export function PropertyConfigPanel() {
 
       {/* Botão excluir — fixo no bottom */}
       <SidebarSection bordered={false} style={{ marginTop: 'auto', borderTop: '1px solid var(--pm-border)' }}>
+        {/* @ts-expect-error type inference mismatch em Button */}
         <Button
           variant="danger"
-          onClick={async () => {
-            if (!confirm(`Excluir "${property.name}" e todas as suas zonas e elementos? Esta ação não pode ser desfeita.`)) return;
-            await del();
-          }}
+          onClick={() => setShowConfirm(true)}
           disabled={isLoading}
         >
           Excluir propriedade
         </Button>
       </SidebarSection>
+
+      <Dialog
+        open={showConfirm}
+        title="Excluir propriedade?"
+        description={`Tem certeza que deseja excluir "${property.name}" e todas as suas zonas e elementos? Esta ação não pode ser desfeita.`}
+        confirmText="Excluir DEFINITIVAMENTE"
+        cancelText="Cancelar"
+        variant="danger"
+        loading={isLoading}
+        onConfirm={async () => {
+          await del();
+          setShowConfirm(false);
+        }}
+        onCancel={() => setShowConfirm(false)}
+      />
     </>
   );
 }

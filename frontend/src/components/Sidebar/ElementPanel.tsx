@@ -1,6 +1,35 @@
+import { useState } from 'react';
 import { useMapStore } from '../../store/useMapStore';
-import { ZoneBadge, Icon } from '@permamap/ui';
+import { useProperty } from '../../hooks/useProperty';
+import { ZoneBadge, Icon, Dialog } from '@permamap/ui';
+import { ElementEditForm } from '../Forms/ElementEditForm';
 import type { ZoneNumber } from '@permamap/ui';
+import type { GeoJSONGeometry } from '../../types';
+
+function getElementCenter(geom: GeoJSONGeometry): [number, number] {
+  if (geom.type === 'Point') {
+    return [geom.coordinates[1], geom.coordinates[0]];
+  }
+  if (geom.type === 'LineString') {
+    const pts = geom.coordinates;
+    const mid = pts[Math.floor(pts.length / 2)];
+    return [mid[1], mid[0]];
+  }
+  if (geom.type === 'Polygon') {
+    const pts = geom.coordinates[0];
+    let minLat = Infinity, maxLat = -Infinity;
+    let minLng = Infinity, maxLng = -Infinity;
+    
+    for (const [lng, lat] of pts) {
+      if (lat < minLat) minLat = lat;
+      if (lat > maxLat) maxLat = lat;
+      if (lng < minLng) minLng = lng;
+      if (lng > maxLng) maxLng = lng;
+    }
+    return [(minLat + maxLat) / 2, (minLng + maxLng) / 2];
+  }
+  return [0, 0];
+}
 
 // Metadados por tipo de elemento
 const TYPE_META: Record<string, { label: string; iconName: 'map-pin' | 'layers' | 'hexagon' | 'fence' }> = {
@@ -11,7 +40,13 @@ const TYPE_META: Record<string, { label: string; iconName: 'map-pin' | 'layers' 
 };
 
 export function ElementPanel() {
-  const { elements, zones, removeElement } = useMapStore();
+  const { elements, zones, setPendingFlyTo } = useMapStore();
+  const { deleteElement } = useProperty();
+  const [editingElementId, setEditingElementId] = useState<string | null>(null);
+
+  // Dialog state
+  const [elementToDelete, setElementToDelete] = useState<{ id: string; label: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   if (elements.length === 0) {
     return (
@@ -44,6 +79,8 @@ export function ElementPanel() {
     );
   }
 
+  const editingElement = elements.find((e) => e.id === editingElementId);
+
   return (
     <div>
       {elements.map((el, i) => {
@@ -63,6 +100,18 @@ export function ElementPanel() {
               borderLeft:     `3px solid ${zoneColor}`,
               animationDelay: `${i * 30}ms`,
               padding:        '13px 16px',
+            }}
+            onClick={() => {
+              const center = getElementCenter(el.geometry_geojson);
+              setPendingFlyTo(center);
+            }}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                const center = getElementCenter(el.geometry_geojson);
+                setPendingFlyTo(center);
+              }
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -140,9 +189,37 @@ export function ElementPanel() {
                 </div>
               </div>
 
-              {/* Botão remover */}
-              <button
-                className="pm-delete-btn"
+              <div style={{ display: 'flex', gap: '4px' }}>
+                {/* Botão editar */}
+                <button
+                  className="pm-edit-btn"
+                  style={{
+                    background:  'none',
+                    border:      'none',
+                    cursor:      'pointer',
+                    padding:     '5px',
+                    borderRadius: '5px',
+                    color:       'var(--pm-text-3)',
+                    display:     'flex',
+                    alignItems:  'center',
+                    flexShrink:  0,
+                    transition:  'color 0.15s ease',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--pm-primary)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--pm-text-3)')}
+                  onClick={() => setEditingElementId(el.id)}
+                  title="Editar"
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                </button>
+
+                {/* Botão remover */}
+                <button
+                  className="pm-delete-btn"
                 style={{
                   background:  'none',
                   border:      'none',
@@ -157,7 +234,10 @@ export function ElementPanel() {
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--pm-danger)')}
                 onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--pm-text-3)')}
-                onClick={() => { if (confirm(`Remover "${label}"?`)) removeElement(el.id); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setElementToDelete({ id: el.id, label });
+                }}
                 title="Remover"
               >
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
@@ -167,11 +247,39 @@ export function ElementPanel() {
                   <path d="M10 11v6M14 11v6"/>
                   <path d="M9 6V4h6v2"/>
                 </svg>
-              </button>
+                </button>
+              </div>
             </div>
           </div>
         );
       })}
+
+      {editingElement && (
+        <ElementEditForm
+          element={editingElement}
+          onClose={() => setEditingElementId(null)}
+        />
+      )}
+
+      {/* Confirmação de Exclusão */}
+      <Dialog
+        open={!!elementToDelete}
+        title="Excluir Elemento?"
+        description={`Tem certeza que deseja remover o elemento "${elementToDelete?.label}" definitivamente do mapa?`}
+        confirmText="Excluir Elemento"
+        cancelText="Cancelar"
+        variant="danger"
+        loading={isDeleting}
+        onConfirm={async () => {
+          if (!elementToDelete) return;
+          setIsDeleting(true);
+          const res = await deleteElement(elementToDelete.id);
+          setIsDeleting(false);
+          if (!res.success) alert(res.error);
+          else setElementToDelete(null);
+        }}
+        onCancel={() => setElementToDelete(null)}
+      />
     </div>
   );
 }

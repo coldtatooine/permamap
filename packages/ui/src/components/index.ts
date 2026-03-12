@@ -13,6 +13,9 @@ export type { ZoneCardProps } from './ZoneCard';
 export { Modal, ModalFooter }     from './Modal';
 export type { ModalProps }        from './Modal';
 
+export { Dialog } from './Dialog';
+export type { DialogProps } from './Dialog';
+
 // Brand components (design system marketing/UI)
 export { Card }              from './Card';
 export type { CardProps, CardVariant } from './Card';

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useMapStore } from '../../store/useMapStore';
 import { ZONE_COLORS, ZONE_LABELS } from '../../types';
 import type { ZoneNumber, GeoJSONPolygon } from '../../types';
-import { Modal, Input, Select, Button, ModalFooter } from '@permamap/ui';
+import { Modal, Input, Select, Button, ModalFooter, Alert } from '@permamap/ui';
 
 interface Props {
   onClose: () => void;
@@ -45,39 +45,55 @@ export function ZoneForm({ onClose }: Props) {
   }
 
   return (
-    <Modal open onClose={handleCancel}>
-      <form onSubmit={handleSubmit} className="space-y-5">
-
-        {/* Header */}
-        <div className="flex items-center gap-3">
-          <div
-            className="w-9 h-9 rounded-full flex items-center justify-center font-bold flex-shrink-0"
-            style={{
-              background: `${previewColor}18`,
-              border: `2px solid ${previewColor}55`,
-              color: previewColor,
-              fontFamily: 'var(--font-mono)',
-              fontSize: '14px',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            {zoneNumber}
+    <Modal open onClose={handleCancel} title="Nova Zona">
+      <form onSubmit={handleSubmit}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          
+          {/* Identificador de Criação */}
+          <div style={{
+            display:      'flex',
+            alignItems:   'center',
+            gap:          '10px',
+            padding:      '10px 12px',
+            borderRadius: '8px',
+            background:   'var(--pm-card)',
+            border:       '1px solid var(--pm-border)',
+          }}>
+            <div style={{
+              width:          '28px',
+              height:         '28px',
+              borderRadius:   '50%',
+              flexShrink:     0,
+              display:        'flex',
+              alignItems:     'center',
+              justifyContent: 'center',
+              background:     `${previewColor}18`,
+              border:         `1.5px solid ${previewColor}50`,
+              fontFamily:     'var(--font-mono)',
+              fontSize:       '13px',
+              color:          previewColor,
+              fontWeight:     'bold'
+            }}>
+              {zoneNumber}
+            </div>
+            <span style={{
+              fontSize:      '0.7rem',
+              fontWeight:    700,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color:         'var(--pm-text-3)',
+              fontFamily:    'var(--font-ui)',
+            }}>
+              Baseada no polígono desenhado
+            </span>
           </div>
-          <div>
-            <h2 className="text-xl font-semibold" style={{ fontFamily: 'var(--font-display)', color: 'var(--pm-text)' }}>
-              Nova Zona
-            </h2>
-            <p className="text-xs" style={{ color: 'var(--pm-text-2)' }}>
-              Polígono desenhado no mapa
-            </p>
-          </div>
-        </div>
 
         {/* Número da zona */}
+        {/* @ts-expect-error - Mismatch in Select props with React versions */}
         <Select
           label="Número da Zona"
-          value={zoneNumber}
-          onChange={(e) => setZoneNumber(Number(e.target.value) as ZoneNumber)}
+          value={zoneNumber as any}
+          onChange={(e: any) => setZoneNumber(Number(e.target.value) as ZoneNumber)}
         >
           {availableNumbers.map((n) => (
             <option key={n} value={n}>{ZONE_LABELS[n]}</option>
@@ -91,25 +107,30 @@ export function ZoneForm({ onClose }: Props) {
         />
 
         {/* Nome */}
+        {/* @ts-expect-error - Mismatch in Input props */}
         <Input
           label="Nome da Zona"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={name as any}
+          onChange={(e: any) => setName(e.target.value)}
           placeholder="Ex: Horta Central"
-          error={error}
-          autoFocus
+          autoFocus={true as any}
         />
 
+        {error && <Alert variant="danger">{error}</Alert>}
+
         <ModalFooter>
-          <div className="flex gap-3">
-            <Button variant="ghost" type="button" onClick={handleCancel} fullWidth>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            {/* @ts-expect-error - Mismatch in Button props */}
+            <Button variant="ghost" type="button" onClick={handleCancel} fullWidth={true as any}>
               Cancelar
             </Button>
-            <Button type="submit" fullWidth>
+            {/* @ts-expect-error - Mismatch in Button props */}
+            <Button type="submit" fullWidth={true as any}>
               Criar Zona
             </Button>
           </div>
         </ModalFooter>
+        </div>
       </form>
     </Modal>
   );

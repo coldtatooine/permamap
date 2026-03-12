@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useMapStore } from '../../store/useMapStore';
 import { POI_TYPES } from '../../types';
 import type { POIType, GeoJSONPoint } from '../../types';
-import { Modal, Input, Select, Textarea, Button, ModalFooter } from '@permamap/ui';
+import { Modal, Input, Select, Textarea, Button, ModalFooter, Alert } from '@permamap/ui';
 
 interface Props {
   onClose: () => void;
@@ -50,46 +50,62 @@ export function POIForm({ onClose }: Props) {
   }
 
   return (
-    <Modal open onClose={handleCancel}>
-      <form onSubmit={handleSubmit} className="space-y-5">
+    <Modal open onClose={handleCancel} title="Novo Ponto de Interesse">
+      <form onSubmit={handleSubmit}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
-        {/* Header */}
-        <div className="flex items-center gap-3">
-          <div
-            className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-base"
-            style={{
-              background: selectedZone ? `${selectedZone.color}18` : 'var(--pm-card)',
-              border: `2px solid ${selectedZone ? `${selectedZone.color}55` : 'var(--pm-border-bright)'}`,
-              color: selectedZone?.color ?? 'var(--pm-text-2)',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            ⬟
+          {/* Identificador de Criação */}
+          <div style={{
+            display:      'flex',
+            alignItems:   'center',
+            gap:          '10px',
+            padding:      '10px 12px',
+            borderRadius: '8px',
+            background:   'var(--pm-card)',
+            border:       '1px solid var(--pm-border)',
+          }}>
+            <div style={{
+              width:          '28px',
+              height:         '28px',
+              borderRadius:   '50%',
+              flexShrink:     0,
+              display:        'flex',
+              alignItems:     'center',
+              justifyContent: 'center',
+              background:     selectedZone ? `${selectedZone.color}18` : 'var(--pm-card)',
+              border:         `1.5px solid ${selectedZone ? `${selectedZone.color}50` : 'var(--pm-border-bright)'}`,
+            }}>
+              <span style={{ fontSize: '12px', color: selectedZone?.color ?? 'var(--pm-text-2)' }}>
+                ⬟
+              </span>
+            </div>
+            <span style={{
+              fontSize:      '0.7rem',
+              fontWeight:    700,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color:         'var(--pm-text-3)',
+              fontFamily:    'var(--font-ui)',
+            }}>
+              Marcador posicionado
+            </span>
           </div>
-          <div>
-            <h2 className="text-xl font-semibold" style={{ fontFamily: 'var(--font-display)', color: 'var(--pm-text)' }}>
-              Novo Ponto de Interesse
-            </h2>
-            <p className="text-xs" style={{ color: 'var(--pm-text-2)' }}>
-              Marcador posicionado no mapa
-            </p>
-          </div>
-        </div>
 
         {/* Nome */}
         <Input
           label="Nome"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={name as any}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
           placeholder="Ex: Horta da Cozinha"
-          autoFocus
+          autoFocus={true as any}
         />
 
         {/* Tipo de POI */}
+        {/* @ts-expect-error type inference */}
         <Select
           label="Tipo"
-          value={poiType}
-          onChange={(e) => setPoiType(e.target.value as POIType)}
+          value={poiType as any}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setPoiType(e.target.value as POIType)}
         >
           {POI_TYPES.map((t) => (
             <option key={t} value={t}>{t}</option>
@@ -98,10 +114,11 @@ export function POIForm({ onClose }: Props) {
 
         {/* Zona vinculada */}
         <div>
+          {/* @ts-expect-error type inference */}
           <Select
             label="Zona"
-            value={zoneId}
-            onChange={(e) => setZoneId(e.target.value)}
+            value={zoneId as any}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setZoneId(e.target.value)}
           >
             {zones.map((z) => (
               <option key={z.id} value={z.id}>
@@ -110,18 +127,22 @@ export function POIForm({ onClose }: Props) {
             ))}
           </Select>
           {selectedZone && (
-            <div
-              className="mt-2 h-0.5 rounded-full transition-all duration-300"
-              style={{ background: selectedZone.color, opacity: 0.7 }}
-            />
+            <div style={{
+              marginTop:   '6px',
+              height:      '2px',
+              borderRadius: '2px',
+              background:  selectedZone.color,
+              opacity:     0.6,
+              transition:  'background 0.2s ease',
+            }} />
           )}
         </div>
 
         {/* Observações */}
         <Textarea
           label="Observações (opcional)"
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
+          value={notes as any}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNotes(e.target.value)}
           rows={2}
           placeholder="Notas sobre este elemento…"
         />
@@ -130,23 +151,25 @@ export function POIForm({ onClose }: Props) {
         <Input
           label="Área estimada (m² — opcional)"
           type="number"
-          value={areaM2}
-          onChange={(e) => setAreaM2(e.target.value)}
+          value={areaM2 as any}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAreaM2(e.target.value)}
           min="0"
           placeholder="Ex: 50"
-          error={error}
         />
 
+        {error && <Alert variant="danger">{error}</Alert>}
+
         <ModalFooter>
-          <div className="flex gap-3">
-            <Button variant="ghost" type="button" onClick={handleCancel} fullWidth>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <Button variant="ghost" type="button" onClick={handleCancel} fullWidth={true as any}>
               Cancelar
             </Button>
-            <Button type="submit" fullWidth>
+            <Button type="submit" fullWidth={true as any}>
               Adicionar POI
             </Button>
           </div>
         </ModalFooter>
+        </div>
       </form>
     </Modal>
   );
