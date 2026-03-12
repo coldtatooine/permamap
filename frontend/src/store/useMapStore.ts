@@ -56,6 +56,7 @@ interface MapStore {
     id?: string;
     created_at?: string;
   }) => { success: boolean; error?: string };
+  updateElement: (id: string, updates: Partial<Pick<Element, 'zone_id' | 'metadata_json'>>) => void;
   removeElement: (id: string) => void;
   setElements: (elements: Element[]) => void;
 
@@ -158,6 +159,12 @@ export const useMapStore = create<MapStore>((set, get) => ({
 
     set({ elements: [...elements, newElement] });
     return { success: true };
+  },
+
+  updateElement: (id, updates) => {
+    set((state) => ({
+      elements: state.elements.map((e) => (e.id === id ? { ...e, ...updates } : e)),
+    }));
   },
 
   removeElement: (id) => {

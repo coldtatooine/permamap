@@ -121,12 +121,13 @@ export function SidebarContent({ children, className }: { children: React.ReactN
 // ── SidebarSection ────────────────────────────────────────────────────────
 
 export interface SidebarSectionProps {
-  children:  React.ReactNode;
-  bordered?: boolean;
+  children:   React.ReactNode;
+  bordered?:  boolean;
   className?: string;
+  style?:     React.CSSProperties;
 }
 
-export function SidebarSection({ children, bordered = true, className }: SidebarSectionProps) {
+export function SidebarSection({ children, bordered = true, className, style }: SidebarSectionProps) {
   return (
     <div
       className={className}
@@ -134,6 +135,7 @@ export function SidebarSection({ children, bordered = true, className }: Sidebar
         flexShrink:    0,
         padding:       '20px',
         ...(bordered ? { borderBottom: '1px solid var(--pm-border)' } : {}),
+        ...style,
       }}
     >
       {children}

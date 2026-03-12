@@ -21,7 +21,7 @@ const TABS: SidebarTab[] = [
 
 export function PropertyConfigPanel() {
   const { property, zones, isLoading, error, clearProperty } = useMapStore();
-  const { saveProperty: save } = useProperty();
+  const { saveProperty: save, deleteProperty: del } = useProperty();
 
   const [tab, setTab]       = useState('zonas');
   const [saveMsg, setSaveMsg] = useState('');
@@ -116,6 +116,20 @@ export function PropertyConfigPanel() {
       <SidebarContent>
         {tab === 'zonas' ? <ZonePanel /> : <ElementPanel />}
       </SidebarContent>
+
+      {/* Botão excluir — fixo no bottom */}
+      <SidebarSection bordered={false} style={{ marginTop: 'auto', borderTop: '1px solid var(--pm-border)' }}>
+        <Button
+          variant="danger"
+          onClick={async () => {
+            if (!confirm(`Excluir "${property.name}" e todas as suas zonas e elementos? Esta ação não pode ser desfeita.`)) return;
+            await del();
+          }}
+          disabled={isLoading}
+        >
+          Excluir propriedade
+        </Button>
+      </SidebarSection>
     </>
   );
 }

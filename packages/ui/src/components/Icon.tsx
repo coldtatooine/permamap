@@ -7,7 +7,7 @@ export type IconName =
   | 'user' | 'message' | 'arrow-right' | 'growth'
   // Map / App
   | 'hexagon' | 'map-pin' | 'fence' | 'layers' | 'trash' | 'check' | 'x' | 'menu'
-  | 'chevron-left' | 'chevron-right' | 'save' | 'plus' | 'locate';
+  | 'chevron-left' | 'chevron-right' | 'save' | 'plus' | 'locate' | 'edit';
 
 export interface IconProps {
   name: IconName;
@@ -121,6 +121,12 @@ const iconPaths: Record<IconName, React.ReactNode> = {
     <>
       <circle cx="12" cy="12" r="3" />
       <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+    </>
+  ),
+  edit: (
+    <>
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
     </>
   ),
 };

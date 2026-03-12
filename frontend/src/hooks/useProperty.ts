@@ -99,6 +99,64 @@ export function useProperty() {
     }
   }
 
+  async function deleteElement(id: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const res = await supabase.from('elements').delete().eq('id', id);
+      if (res.error) throw res.error;
+      useMapStore.getState().removeElement(id);
+      return { success: true };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao excluir elemento.';
+      return { success: false, error: msg };
+    }
+  }
+
+  async function updateElement(
+    id: string,
+    updates: { zone_id?: string; metadata_json?: import('../types').ElementMetadata },
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const res = await supabase
+        .from('elements')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+      if (res.error) throw res.error;
+      useMapStore.getState().updateElement(id, updates);
+      return { success: true };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao atualizar elemento.';
+      return { success: false, error: msg };
+    }
+  }
+
+  async function deleteProperty(): Promise<{ success: boolean; error?: string }> {
+    if (!property) return { success: false, error: 'Nenhuma propriedade ativa.' };
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // ON DELETE CASCADE no DB elimina zonas e elementos automaticamente
+      const res = await supabase
+        .from('properties')
+        .delete()
+        .eq('id', property.id);
+
+      if (res.error) throw res.error;
+
+      useMapStore.getState().clearProperty();
+      return { success: true };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao excluir propriedade.';
+      setError(msg);
+      return { success: false, error: msg };
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function createProperty(name: string, lat?: number, lng?: number): Promise<Property> {
     const payload: Partial<Property> = { name };
     if (lat !== undefined && lng !== undefined) {
@@ -117,5 +175,5 @@ export function useProperty() {
     return created;
   }
 
-  return { loadProperty, saveProperty, createProperty, listProperties, property };
+  return { loadProperty, saveProperty, createProperty, deleteProperty, deleteElement, updateElement, listProperties, property };
 }

@@ -7,11 +7,30 @@ export function ZonePanel() {
 
   if (zones.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3 text-center p-6"
-        style={{ minHeight: '140px' }}>
-        <Icon name="hexagon" size={28} color="var(--pm-text-3)" />
-        <p className="text-xs leading-relaxed" style={{ color: 'var(--pm-text-3)', maxWidth: '180px' }}>
-          Use <span className="font-semibold" style={{ color: 'var(--pm-text-2)' }}>Criar Zona</span> no mapa para começar
+      <div style={{
+        display:        'flex',
+        flexDirection:  'column',
+        alignItems:     'center',
+        justifyContent: 'center',
+        gap:            '10px',
+        textAlign:      'center',
+        padding:        '40px 24px',
+        minHeight:      '160px',
+      }}>
+        <div style={{
+          width:          '40px',
+          height:         '40px',
+          borderRadius:   '50%',
+          background:     'var(--pm-card)',
+          border:         '1px solid var(--pm-border-bright)',
+          display:        'flex',
+          alignItems:     'center',
+          justifyContent: 'center',
+        }}>
+          <Icon name="hexagon" size={18} color="var(--pm-text-3)" />
+        </div>
+        <p style={{ fontSize: '0.75rem', color: 'var(--pm-text-3)', maxWidth: '160px', lineHeight: 1.5 }}>
+          Use <strong style={{ color: 'var(--pm-text-2)', fontWeight: 600 }}>Criar Zona</strong> no mapa para começar
         </p>
       </div>
     );
