@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { LoginScreen } from './LoginScreen';
 import { RegisterScreen } from './RegisterScreen';
-import permamapLogo from '../../assets/permamap-logo.svg';
+import permamapLogo from '../../assets/permamap-logo-full.svg';
 
 // =====================
 // AuthScreen — layout split-screen (painel de marca + formulário)
@@ -90,7 +90,7 @@ export function AuthScreen() {
         <img
           src={permamapLogo}
           alt="Permamap"
-          style={{ height: '40px', width: 'auto', position: 'relative' }}
+          style={{ height: '64px', width: 'auto', position: 'relative' }}
         />
 
         {/* Conteúdo central */}

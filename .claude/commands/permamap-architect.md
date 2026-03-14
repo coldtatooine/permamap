@@ -64,7 +64,7 @@ d:/git/permamap/
 │   ├── hooks/               useProperty.ts · useGeolocation.ts
 │   ├── lib/                 supabase.ts
 │   ├── types/               index.ts
-│   └── assets/              permamap-logo.svg
+│   └── assets/              permamap-logo-full.svg
 │
 └── supabase/migrations/
     ├── 001_initial_schema.sql   (properties / zones / elements)

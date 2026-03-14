@@ -5,7 +5,7 @@ import { useProperty } from '../../hooks/useProperty';
 import { useGeolocation } from '../../hooks/useGeolocation';
 import { Input, Button, Modal, Stepper, Divider, Icon } from '@permamap/ui';
 import type { StepperStep } from '@permamap/ui';
-import permamapLogo from '../../assets/permamap-logo.svg';
+import permamapLogo from '../../assets/permamap-logo-full.svg';
 
 const STEPS: StepperStep[] = [
   { key: 'property', label: 'Propriedade', num: 1 },

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useMapStore } from '../../store/useMapStore';
 import { useProperty } from '../../hooks/useProperty';
-import { POI_TYPES } from '../../types';
+import { POI_TYPES, POI_TYPE_DEFINITIONS } from '../../types';
 import type { Element, POIType } from '../../types';
 import { Modal, Input, Select, Textarea, Button, ModalFooter, Alert } from '@permamap/ui';
 
@@ -19,9 +19,10 @@ export function ElementEditForm({ element, onClose }: Props) {
   const [zoneId, setZoneId] = useState(element.zone_id);
   const [notes,  setNotes]  = useState(element.metadata_json.notes  ?? '');
   const [areaM2, setAreaM2] = useState(element.metadata_json.area_m2?.toString() ?? '');
-  const [poiType, setPoiType] = useState<POIType>(
-    element.metadata_json.poi_type ?? POI_TYPES[0],
-  );
+  const [poiType, setPoiType] = useState<POIType>(() => {
+    const stored = element.metadata_json.poi_type;
+    return (stored && stored in POI_TYPE_DEFINITIONS) ? stored : POI_TYPES[0];
+  });
 
   const [error,   setError]   = useState('');
   const [saving,  setSaving]  = useState(false);
@@ -113,7 +114,9 @@ export function ElementEditForm({ element, onClose }: Props) {
               onChange={(e) => setPoiType(e.target.value as POIType)}
             >
               {POI_TYPES.map((t) => (
-                <option key={t} value={t}>{t}</option>
+                <option key={t} value={t}>
+                  {POI_TYPE_DEFINITIONS[t].label}
+                </option>
               ))}
             </Select>
           )}

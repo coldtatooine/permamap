@@ -10,7 +10,7 @@ import { useGeolocation } from './hooks/useGeolocation';
 import { supabase } from './lib/supabase';
 import { Sidebar, SidebarHeader, SidebarToggle } from '@permamap/ui';
 import { UserFooter } from './components/Sidebar/UserFooter';
-import permamapLogo from './assets/permamap-logo.svg';
+import permamapLogo from './assets/permamap-logo-full.svg';
 
 const LEFT_WIDTH  = 220;
 const RIGHT_WIDTH = 280;
