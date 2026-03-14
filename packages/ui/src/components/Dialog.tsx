@@ -1,11 +1,11 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import { Modal, ModalFooter } from './Modal';
 import { Button } from './Button';
 
 export interface DialogProps {
   open: boolean;
   title: string;
-  description: React.ReactNode;
+  description: ReactNode;
   confirmText?: string;
   cancelText?: string;
   variant?: 'danger' | 'primary';
@@ -41,7 +41,6 @@ export function Dialog({
 
       <ModalFooter>
         <div style={{ display: 'flex', gap: '10px' }}>
-          {/* @ts-expect-error type inference mismatch */}
           <Button
             variant="ghost"
             onClick={onCancel}
@@ -50,7 +49,6 @@ export function Dialog({
           >
             {cancelText}
           </Button>
-          {/* @ts-expect-error type inference mismatch */}
           <Button
             variant={variant}
             onClick={onConfirm}

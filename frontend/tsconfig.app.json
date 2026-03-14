@@ -25,7 +25,11 @@
     "noUncheckedSideEffectImports": true,
     "paths": {
       "@permamap/ui": ["../packages/ui/src/index.ts"],
-      "@permamap/ui/*": ["../packages/ui/src/*"]
+      "@permamap/ui/*": ["../packages/ui/src/*"],
+      "react": ["./node_modules/@types/react"],
+      "react/jsx-runtime": ["./node_modules/@types/react/jsx-runtime"],
+      "react-dom": ["./node_modules/@types/react-dom"],
+      "framer-motion": ["./node_modules/framer-motion"]
     }
   },
   "include": ["src", "../packages/ui/src"]

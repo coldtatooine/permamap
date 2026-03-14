@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { useProperty } from '../../hooks/useProperty';
 import { useMapStore } from '../../store/useMapStore';
 
@@ -12,7 +13,7 @@ export function PropertyForm({ onCreated }: Props) {
   const [name, setName] = useState('');
   const [localError, setLocalError] = useState('');
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!name.trim()) {
       setLocalError('Nome é obrigatório.');

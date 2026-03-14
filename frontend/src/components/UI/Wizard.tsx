@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { useMapStore } from '../../store/useMapStore';
 import { useProperty } from '../../hooks/useProperty';
 import { useGeolocation } from '../../hooks/useGeolocation';
@@ -26,7 +27,7 @@ export function Wizard() {
 
   const currentNum = STEPS.find((s) => s.key === wizardStep)?.num ?? 1;
 
-  async function handleCreateProperty(e: React.FormEvent) {
+  async function handleCreateProperty(e: FormEvent) {
     e.preventDefault();
     if (!propName.trim()) { setError('Nome é obrigatório.'); return; }
     setError('');
@@ -61,7 +62,7 @@ export function Wizard() {
     }
   }
 
-  async function handleSearchAddress(e: React.FormEvent) {
+  async function handleSearchAddress(e: FormEvent) {
     e.preventDefault();
     if (!address.trim()) { setWizardStep('zone0'); return; }
     setIsSearching(true);

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { FormEvent, ReactNode } from 'react';
 import { Input, Button, Alert } from '@permamap/ui';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -21,7 +22,7 @@ export function RegisterScreen({ onSwitchToLogin }: RegisterScreenProps) {
   const [awaitingConfirmation, setAwaiting]   = useState(false);
   const [resendDone, setResendDone]           = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!email.trim() || !password || !confirmPassword) {
       setError('Preencha todos os campos.');
@@ -209,7 +210,7 @@ export function RegisterScreen({ onSwitchToLogin }: RegisterScreenProps) {
 
 // ── Link de troca de tela ────────────────────────────────────────────────────
 
-function SwitchLink({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
+function SwitchLink({ onClick, children }: { onClick: () => void; children: ReactNode }) {
   return (
     <button
       type="button"

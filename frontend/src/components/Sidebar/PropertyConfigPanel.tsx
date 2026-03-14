@@ -87,7 +87,6 @@ export function PropertyConfigPanel() {
 
       {/* Botão excluir — fixo no bottom */}
       <SidebarSection bordered={false} style={{ marginTop: 'auto', borderTop: '1px solid var(--pm-border)' }}>
-        {/* @ts-expect-error type inference mismatch em Button */}
         <Button
           variant="danger"
           onClick={() => setShowConfirm(true)}

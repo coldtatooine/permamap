@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { useProperty } from '../../hooks/useProperty';
 import type { Zone, ZoneNumber } from '../../types';
 import { ZONE_LABELS } from '../../types';
@@ -18,7 +19,7 @@ export function ZoneEditForm({ zone, onClose }: Props) {
   const [error,   setError]   = useState('');
   const [saving,  setSaving]  = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!name.trim()) { setError('Nome é obrigatório.'); return; }
 

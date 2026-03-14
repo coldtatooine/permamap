@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { useMapStore } from '../../store/useMapStore';
 import { useProperty } from '../../hooks/useProperty';
 import { ZONE_COLORS, ZONE_LABELS } from '../../types';
@@ -25,7 +26,7 @@ export function ZoneForm({ onClose }: Props) {
 
   const previewColor = ZONE_COLORS[zoneNumber];
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!name.trim()) { setError('Nome é obrigatório.'); return; }
     if (!pendingGeometry || pendingGeometry.type !== 'Polygon') {
@@ -95,11 +96,10 @@ export function ZoneForm({ onClose }: Props) {
           </div>
 
         {/* Número da zona */}
-        {/* @ts-expect-error - Mismatch in Select props with React versions */}
         <Select
           label="Número da Zona"
-          value={zoneNumber as any}
-          onChange={(e: any) => setZoneNumber(Number(e.target.value) as ZoneNumber)}
+          value={zoneNumber}
+          onChange={(e) => setZoneNumber(Number(e.target.value) as ZoneNumber)}
         >
           {availableNumbers.map((n) => (
             <option key={n} value={n}>{ZONE_LABELS[n]}</option>
@@ -113,25 +113,22 @@ export function ZoneForm({ onClose }: Props) {
         />
 
         {/* Nome */}
-        {/* @ts-expect-error - Mismatch in Input props */}
         <Input
           label="Nome da Zona"
-          value={name as any}
-          onChange={(e: any) => setName(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           placeholder="Ex: Horta Central"
-          autoFocus={true as any}
+          autoFocus
         />
 
         {error && <Alert variant="danger">{error}</Alert>}
 
         <ModalFooter>
           <div style={{ display: 'flex', gap: '10px' }}>
-            {/* @ts-expect-error - Mismatch in Button props */}
-            <Button variant="ghost" type="button" onClick={handleCancel} fullWidth={true as any}>
+            <Button variant="ghost" type="button" onClick={handleCancel} fullWidth>
               Cancelar
             </Button>
-            {/* @ts-expect-error - Mismatch in Button props */}
-            <Button type="submit" disabled={saving} fullWidth={true as any}>
+            <Button type="submit" disabled={saving} fullWidth>
               {saving ? 'Salvando…' : 'Criar Zona'}
             </Button>
           </div>

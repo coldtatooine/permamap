@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { Input, Button, Alert } from '@permamap/ui';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -18,7 +19,7 @@ export function LoginScreen({ onSwitchToRegister }: LoginScreenProps) {
   const [error, setError]       = useState('');
   const [loading, setLoading]   = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!email.trim() || !password) { setError('Preencha email e senha.'); return; }
     setError('');

@@ -1,5 +1,3 @@
-import React from 'react';
-
 // =====================
 // Divider — separador horizontal com label opcional
 // =====================

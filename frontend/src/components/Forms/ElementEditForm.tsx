@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { useMapStore } from '../../store/useMapStore';
 import { useProperty } from '../../hooks/useProperty';
 import { POI_TYPES } from '../../types';
@@ -27,7 +28,7 @@ export function ElementEditForm({ element, onClose }: Props) {
 
   const selectedZone = zones.find((z) => z.id === zoneId);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!name.trim()) { setError('Nome é obrigatório.'); return; }
     if (!zoneId)      { setError('Selecione uma zona.'); return; }

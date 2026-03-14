@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { useMapStore } from '../../store/useMapStore';
 import { useProperty } from '../../hooks/useProperty';
 import { POI_TYPES } from '../../types';
@@ -23,7 +24,7 @@ export function POIForm({ onClose }: Props) {
 
   const selectedZone = zones.find((z) => z.id === zoneId);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!name.trim()) { setError('Nome é obrigatório.'); return; }
     if (!zoneId) { setError('Selecione uma zona.'); return; }
@@ -100,18 +101,17 @@ export function POIForm({ onClose }: Props) {
         {/* Nome */}
         <Input
           label="Nome"
-          value={name as any}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           placeholder="Ex: Horta da Cozinha"
-          autoFocus={true as any}
+          autoFocus
         />
 
         {/* Tipo de POI */}
-        {/* @ts-expect-error type inference */}
         <Select
           label="Tipo"
-          value={poiType as any}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setPoiType(e.target.value as POIType)}
+          value={poiType}
+          onChange={(e) => setPoiType(e.target.value as POIType)}
         >
           {POI_TYPES.map((t) => (
             <option key={t} value={t}>{t}</option>
@@ -120,11 +120,10 @@ export function POIForm({ onClose }: Props) {
 
         {/* Zona vinculada */}
         <div>
-          {/* @ts-expect-error type inference */}
           <Select
             label="Zona"
-            value={zoneId as any}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setZoneId(e.target.value)}
+            value={zoneId}
+            onChange={(e) => setZoneId(e.target.value)}
           >
             {zones.map((z) => (
               <option key={z.id} value={z.id}>
@@ -147,8 +146,8 @@ export function POIForm({ onClose }: Props) {
         {/* Observações */}
         <Textarea
           label="Observações (opcional)"
-          value={notes as any}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNotes(e.target.value)}
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
           rows={2}
           placeholder="Notas sobre este elemento…"
         />
@@ -157,8 +156,8 @@ export function POIForm({ onClose }: Props) {
         <Input
           label="Área estimada (m² — opcional)"
           type="number"
-          value={areaM2 as any}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAreaM2(e.target.value)}
+          value={areaM2}
+          onChange={(e) => setAreaM2(e.target.value)}
           min="0"
           placeholder="Ex: 50"
         />
@@ -167,10 +166,10 @@ export function POIForm({ onClose }: Props) {
 
         <ModalFooter>
           <div style={{ display: 'flex', gap: '10px' }}>
-            <Button variant="ghost" type="button" onClick={handleCancel} fullWidth={true as any}>
+            <Button variant="ghost" type="button" onClick={handleCancel} fullWidth>
               Cancelar
             </Button>
-            <Button type="submit" disabled={saving} fullWidth={true as any}>
+            <Button type="submit" disabled={saving} fullWidth>
               {saving ? 'Salvando…' : 'Adicionar POI'}
             </Button>
           </div>

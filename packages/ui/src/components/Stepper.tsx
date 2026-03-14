@@ -1,5 +1,3 @@
-import React from 'react';
-
 // =====================
 // Stepper — indicador de progresso por passos
 // =====================
