@@ -1,0 +1,44 @@
+# Dependências — nunca copiar node_modules do host (são binários específicos de OS)
+node_modules/
+frontend/node_modules/
+packages/*/node_modules/
+
+# Build outputs
+frontend/dist/
+frontend/.vite/
+
+# Supabase CLI local
+supabase/.branches/
+supabase/.temp/
+
+# Git
+.git/
+.gitignore
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Env files com segredos — nunca incluir no contexto Docker
+.env
+.env.local
+.env.*.local
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+
+# Claude / memória local
+.claude/
+
+# Design assets grandes (não necessários para o build)
+design/
