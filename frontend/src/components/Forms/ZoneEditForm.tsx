@@ -43,7 +43,7 @@ export function ZoneEditForm({ zone, onClose }: Props) {
   }
 
   return (
-    <Modal open onClose={onClose} title={`Editar Zona (${zone.name})`}>
+    <Modal open onClose={onClose} loading={saving} title={`Editar Zona (${zone.name})`}>
       <form onSubmit={handleSubmit}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
@@ -74,7 +74,7 @@ export function ZoneEditForm({ zone, onClose }: Props) {
               <Button variant="ghost" type="button" onClick={onClose} fullWidth>
                 Cancelar
               </Button>
-              <Button type="submit" loading={saving} fullWidth>
+              <Button type="submit" disabled={saving} fullWidth>
                 Salvar
               </Button>
             </div>

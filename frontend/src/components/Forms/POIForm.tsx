@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useMapStore } from '../../store/useMapStore';
+import { useProperty } from '../../hooks/useProperty';
 import { POI_TYPES } from '../../types';
 import type { POIType, GeoJSONPoint } from '../../types';
 import { Modal, Input, Select, Textarea, Button, ModalFooter, Alert } from '@permamap/ui';
@@ -9,7 +10,8 @@ interface Props {
 }
 
 export function POIForm({ onClose }: Props) {
-  const { zones, pendingGeometry, addElement, setPendingGeometry } = useMapStore();
+  const { zones, pendingGeometry, setPendingGeometry } = useMapStore();
+  const { createElement } = useProperty();
 
   const [name, setName]       = useState('');
   const [poiType, setPoiType] = useState<POIType>(POI_TYPES[0]);
@@ -17,10 +19,11 @@ export function POIForm({ onClose }: Props) {
   const [notes, setNotes]     = useState('');
   const [areaM2, setAreaM2]   = useState('');
   const [error, setError]     = useState('');
+  const [saving, setSaving]   = useState(false);
 
   const selectedZone = zones.find((z) => z.id === zoneId);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim()) { setError('Nome é obrigatório.'); return; }
     if (!zoneId) { setError('Selecione uma zona.'); return; }
@@ -28,17 +31,20 @@ export function POIForm({ onClose }: Props) {
       setError('Geometria inválida.');
       return;
     }
-    const result = addElement({
-      zone_id: zoneId,
-      type: 'poi',
+    setSaving(true);
+    setError('');
+    const result = await createElement({
+      zone_id:          zoneId,
+      type:             'poi',
       geometry_geojson: pendingGeometry as GeoJSONPoint,
       metadata_json: {
-        name: name.trim(),
+        name:     name.trim(),
         poi_type: poiType,
-        notes: notes.trim() || undefined,
-        area_m2: areaM2 ? parseFloat(areaM2) : undefined,
+        notes:    notes.trim() || undefined,
+        area_m2:  areaM2 ? parseFloat(areaM2) : undefined,
       },
     });
+    setSaving(false);
     if (!result.success) { setError(result.error ?? 'Erro ao criar POI.'); return; }
     setPendingGeometry(null);
     onClose();
@@ -50,7 +56,7 @@ export function POIForm({ onClose }: Props) {
   }
 
   return (
-    <Modal open onClose={handleCancel} title="Novo Ponto de Interesse">
+    <Modal open onClose={handleCancel} title="Novo Ponto de Interesse" loading={saving}>
       <form onSubmit={handleSubmit}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
@@ -164,8 +170,8 @@ export function POIForm({ onClose }: Props) {
             <Button variant="ghost" type="button" onClick={handleCancel} fullWidth={true as any}>
               Cancelar
             </Button>
-            <Button type="submit" fullWidth={true as any}>
-              Adicionar POI
+            <Button type="submit" disabled={saving} fullWidth={true as any}>
+              {saving ? 'Salvando…' : 'Adicionar POI'}
             </Button>
           </div>
         </ModalFooter>

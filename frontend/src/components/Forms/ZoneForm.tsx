@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useMapStore } from '../../store/useMapStore';
+import { useProperty } from '../../hooks/useProperty';
 import { ZONE_COLORS, ZONE_LABELS } from '../../types';
 import type { ZoneNumber, GeoJSONPolygon } from '../../types';
 import { Modal, Input, Select, Button, ModalFooter, Alert } from '@permamap/ui';
@@ -9,7 +10,8 @@ interface Props {
 }
 
 export function ZoneForm({ onClose }: Props) {
-  const { zones, pendingGeometry, addZone, setPendingGeometry } = useMapStore();
+  const { zones, pendingGeometry, setPendingGeometry } = useMapStore();
+  const { createZone } = useProperty();
 
   const usedNumbers = zones.map((z) => z.zone_number);
   const availableNumbers = ([0, 1, 2, 3, 4, 5] as ZoneNumber[]).filter(
@@ -19,21 +21,25 @@ export function ZoneForm({ onClose }: Props) {
   const [zoneNumber, setZoneNumber] = useState<ZoneNumber>(availableNumbers[0] ?? 0);
   const [name, setName]             = useState('');
   const [error, setError]           = useState('');
+  const [saving, setSaving]         = useState(false);
 
   const previewColor = ZONE_COLORS[zoneNumber];
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim()) { setError('Nome é obrigatório.'); return; }
     if (!pendingGeometry || pendingGeometry.type !== 'Polygon') {
       setError('Geometria inválida.');
       return;
     }
-    const result = addZone({
-      zone_number: zoneNumber,
-      name: name.trim(),
+    setSaving(true);
+    setError('');
+    const result = await createZone({
+      zone_number:     zoneNumber,
+      name:            name.trim(),
       polygon_geojson: pendingGeometry as GeoJSONPolygon,
     });
+    setSaving(false);
     if (!result.success) { setError(result.error ?? 'Erro ao criar zona.'); return; }
     setPendingGeometry(null);
     onClose();
@@ -45,7 +51,7 @@ export function ZoneForm({ onClose }: Props) {
   }
 
   return (
-    <Modal open onClose={handleCancel} title="Nova Zona">
+    <Modal open onClose={handleCancel} title="Nova Zona" loading={saving}>
       <form onSubmit={handleSubmit}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           
@@ -125,8 +131,8 @@ export function ZoneForm({ onClose }: Props) {
               Cancelar
             </Button>
             {/* @ts-expect-error - Mismatch in Button props */}
-            <Button type="submit" fullWidth={true as any}>
-              Criar Zona
+            <Button type="submit" disabled={saving} fullWidth={true as any}>
+              {saving ? 'Salvando…' : 'Criar Zona'}
             </Button>
           </div>
         </ModalFooter>

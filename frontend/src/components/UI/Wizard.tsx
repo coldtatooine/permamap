@@ -4,6 +4,7 @@ import { useProperty } from '../../hooks/useProperty';
 import { useGeolocation } from '../../hooks/useGeolocation';
 import { Input, Button, Modal, Stepper, Divider, Icon } from '@permamap/ui';
 import type { StepperStep } from '@permamap/ui';
+import permamapLogo from '../../assets/permamap-logo.svg';
 
 const STEPS: StepperStep[] = [
   { key: 'property', label: 'Propriedade', num: 1 },
@@ -82,7 +83,7 @@ export function Wizard() {
   }
 
   return (
-    <Modal open={isWizardOpen} onClose={closeWizard} zIndex={3000} closeOnOverlay={false} maxWidth="440px">
+    <Modal open={isWizardOpen} onClose={closeWizard} loading={isLocating || isSearching} zIndex={3000} closeOnOverlay={false} maxWidth="440px">
       {/* Stepper */}
       <Stepper steps={STEPS} currentNum={currentNum} className="mb-9" />
 
@@ -128,7 +129,6 @@ export function Wizard() {
             variant="ghost"
             onClick={handleUseMyLocation}
             disabled={isLocating}
-            loading={isLocating}
             fullWidth
           >
             {!isLocating && <Icon name="locate" size={15} color="var(--pm-accent)" />}
@@ -151,7 +151,7 @@ export function Wizard() {
               <Button variant="ghost" type="button" onClick={() => setWizardStep('zone0')} fullWidth>
                 Pular
               </Button>
-              <Button type="submit" loading={isSearching} fullWidth>
+              <Button type="submit" disabled={isSearching} fullWidth>
                 {isSearching ? 'Buscando…' : 'Centralizar →'}
               </Button>
             </div>
@@ -218,20 +218,8 @@ export function Wizard() {
       {/* ── Step 4 – Concluído ── */}
       {wizardStep === 'done' && (
         <div className="space-y-5 text-center pm-animate-in">
-          <div
-            style={{
-              width:       '64px',
-              height:      '64px',
-              borderRadius: '50%',
-              display:     'flex',
-              alignItems:  'center',
-              justifyContent: 'center',
-              margin:      '0 auto',
-              background:  'var(--pm-accent-muted)',
-              border:      '2px solid var(--pm-accent)',
-            }}
-          >
-            <Icon name="hexagon" size={28} color="var(--pm-accent)" />
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4px' }}>
+            <img src={permamapLogo} alt="Permamap" style={{ height: '56px', width: 'auto' }} />
           </div>
           <div>
             <h2 style={{ fontFamily: 'var(--font-display)', color: 'var(--pm-text)', fontSize: '1.5rem', fontWeight: 600 }}>

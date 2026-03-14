@@ -1,6 +1,8 @@
 import { supabase } from '../lib/supabase';
 import { useMapStore } from '../store/useMapStore';
-import type { Property, Zone, Element } from '../types';
+import { useAuthStore } from '../store/useAuthStore';
+import { ZONE_COLORS } from '../types';
+import type { Property, Zone, Element, ZoneNumber, GeoJSONPolygon, GeoJSONGeometry, ElementType, ElementMetadata } from '../types';
 
 export function useProperty() {
   const {
@@ -190,8 +192,89 @@ export function useProperty() {
     }
   }
 
+  async function createZone(params: {
+    zone_number: ZoneNumber;
+    name: string;
+    polygon_geojson: GeoJSONPolygon;
+  }): Promise<{ success: boolean; error?: string }> {
+    const { property, zones } = useMapStore.getState();
+    if (!property) return { success: false, error: 'Nenhuma propriedade ativa.' };
+
+    // Validações de negócio antes de ir ao banco
+    if (zones.length >= 5) return { success: false, error: 'Máximo de 5 zonas por propriedade.' };
+    if (zones.some((z) => z.zone_number === params.zone_number)) {
+      return { success: false, error: `Zona ${params.zone_number} já existe nesta propriedade.` };
+    }
+
+    try {
+      const res = await supabase
+        .from('zones')
+        .insert({
+          property_id:    property.id,
+          zone_number:    params.zone_number,
+          name:           params.name,
+          color:          ZONE_COLORS[params.zone_number],
+          polygon_geojson: params.polygon_geojson,
+        })
+        .select()
+        .single();
+
+      if (res.error) throw res.error;
+
+      // Adiciona ao store com o id real retornado pelo banco
+      useMapStore.getState().addZone({
+        ...params,
+        id:          res.data.id,
+        property_id: property.id,
+        created_at:  res.data.created_at,
+      });
+
+      return { success: true };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao criar zona.';
+      return { success: false, error: msg };
+    }
+  }
+
+  async function createElement(params: {
+    zone_id:          string;
+    type:             ElementType;
+    geometry_geojson: GeoJSONGeometry;
+    metadata_json:    ElementMetadata;
+  }): Promise<{ success: boolean; error?: string }> {
+    const { zones } = useMapStore.getState();
+    const zone = zones.find((z) => z.id === params.zone_id);
+    if (!zone) return { success: false, error: 'Zona não encontrada.' };
+    if (zone.zone_number === 5 && (params.type === 'culture' || params.type === 'animal')) {
+      return { success: false, error: 'Zona 5 (Silvestre) não permite culturas ou animais.' };
+    }
+
+    try {
+      const res = await supabase
+        .from('elements')
+        .insert(params)
+        .select()
+        .single();
+
+      if (res.error) throw res.error;
+
+      // Adiciona ao store com o id real retornado pelo banco
+      useMapStore.getState().addElement({
+        ...params,
+        id:         res.data.id,
+        created_at: res.data.created_at,
+      });
+
+      return { success: true };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Erro ao criar elemento.';
+      return { success: false, error: msg };
+    }
+  }
+
   async function createProperty(name: string, lat?: number, lng?: number): Promise<Property> {
-    const payload: Partial<Property> = { name };
+    const { user } = useAuthStore.getState();
+    const payload: Partial<Property> = { name, user_id: user?.id };
     if (lat !== undefined && lng !== undefined) {
       payload.location = { type: 'Point', coordinates: [lng, lat] };
     }
@@ -208,5 +291,5 @@ export function useProperty() {
     return created;
   }
 
-  return { loadProperty, saveProperty, createProperty, deleteProperty, deleteZone, deleteElement, updateZone, updateElement, listProperties, property };
+  return { loadProperty, saveProperty, createProperty, createZone, createElement, deleteProperty, deleteZone, deleteElement, updateZone, updateElement, listProperties, property };
 }

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useProperty } from '../../hooks/useProperty';
 import { useMapStore } from '../../store/useMapStore';
 import {
-  Alert,
   Button,
   SidebarHeader,
   SidebarTabs,
@@ -21,27 +20,15 @@ const TABS: SidebarTab[] = [
 ];
 
 export function PropertyConfigPanel() {
-  const { property, zones, isLoading, error, clearProperty } = useMapStore();
-  const { saveProperty: save, deleteProperty: del } = useProperty();
+  const { property, isLoading, clearProperty } = useMapStore();
+  const { deleteProperty: del } = useProperty();
 
-  const [tab, setTab]       = useState('zonas');
-  const [saveMsg, setSaveMsg] = useState('');
-  
+  const [tab, setTab] = useState('zonas');
+
   // Dialog state
   const [showConfirm, setShowConfirm] = useState(false);
 
   if (!property) return null;
-
-  const hasZone0 = zones.some((z) => z.zone_number === 0);
-
-  async function handleSave() {
-    setSaveMsg('');
-    const result = await save();
-    if (result.success) {
-      setSaveMsg('Salvo!');
-      setTimeout(() => setSaveMsg(''), 2800);
-    }
-  }
 
   return (
     <>
@@ -89,29 +76,6 @@ export function PropertyConfigPanel() {
 
         <Icon name="hexagon" size={16} color="var(--pm-accent)" />
       </SidebarHeader>
-
-      {/* Seção salvar */}
-      <SidebarSection>
-        {!hasZone0 && (
-          <div style={{ marginBottom: '12px' }}>
-            <Alert variant="warn">Zona 0 é obrigatória para salvar.</Alert>
-          </div>
-        )}
-
-        {/* @ts-expect-error type inference mismatch em Button */}
-        <Button
-          onClick={handleSave}
-          disabled={isLoading || !hasZone0}
-        >
-          {saveMsg || 'Salvar propriedade'}
-        </Button>
-
-        {error && (
-          <p style={{ fontSize: '0.75rem', color: 'var(--pm-danger)', marginTop: '6px' }}>
-            {error}
-          </p>
-        )}
-      </SidebarSection>
 
       {/* Abas */}
       <SidebarTabs tabs={TABS} active={tab} onChange={setTab} />

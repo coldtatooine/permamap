@@ -56,7 +56,7 @@ export function ElementEditForm({ element, onClose }: Props) {
   }
 
   return (
-    <Modal open onClose={onClose} title="Editar elemento">
+    <Modal open onClose={onClose} loading={saving} title="Editar elemento">
       <form onSubmit={handleSubmit}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
@@ -165,7 +165,7 @@ export function ElementEditForm({ element, onClose }: Props) {
               <Button variant="ghost" type="button" onClick={onClose} fullWidth>
                 Cancelar
               </Button>
-              <Button type="submit" loading={saving} fullWidth>
+              <Button type="submit" disabled={saving} fullWidth>
                 Salvar
               </Button>
             </div>

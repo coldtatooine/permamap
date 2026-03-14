@@ -31,6 +31,7 @@ export interface Property {
   name: string;
   location: GeoJSONPoint | null;
   created_at: string;
+  user_id?: string;
 }
 
 export interface Zone {

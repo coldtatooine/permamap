@@ -3,19 +3,38 @@ import { MapView } from './components/Map/MapView';
 import { PropertyListPanel } from './components/Sidebar/PropertyListPanel';
 import { PropertyConfigPanel } from './components/Sidebar/PropertyConfigPanel';
 import { Wizard } from './components/UI/Wizard';
+import { AuthScreen } from './components/Auth/AuthScreen';
 import { useMapStore } from './store/useMapStore';
+import { useAuthStore } from './store/useAuthStore';
 import { useGeolocation } from './hooks/useGeolocation';
-import { Icon, Sidebar, SidebarHeader, SidebarToggle } from '@permamap/ui';
+import { supabase } from './lib/supabase';
+import { Sidebar, SidebarHeader, SidebarToggle } from '@permamap/ui';
+import { UserFooter } from './components/Sidebar/UserFooter';
+import permamapLogo from './assets/permamap-logo.svg';
 
 const LEFT_WIDTH  = 220;
 const RIGHT_WIDTH = 280;
 
 export default function App() {
   const { property, isLoading } = useMapStore();
+  const { user, isAuthReady, setSession, setAuthReady } = useAuthStore();
   const { getCurrentPosition } = useGeolocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
+  // ── Listener de autenticação — deve ser o primeiro efeito ──
   useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+        setAuthReady();
+      },
+    );
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // ── Geolocalização — só executa após autenticação ──
+  useEffect(() => {
+    if (!user) return;
     getCurrentPosition()
       .then(({ lat, lng }) => {
         const { setUserLocation, setPendingFlyTo, property } = useMapStore.getState();
@@ -23,7 +42,33 @@ export default function App() {
         if (!property?.location) setPendingFlyTo([lat, lng]);
       })
       .catch(() => {});
-  }, []);
+  }, [user]);
+
+  // ── Loading enquanto o Supabase resolve a sessão ──
+  if (!isAuthReady) {
+    return (
+      <div
+        style={{
+          position:        'fixed',
+          inset:           0,
+          background:      'var(--pm-void)',
+          display:         'flex',
+          alignItems:      'center',
+          justifyContent:  'center',
+        }}
+      >
+        <img
+          src={permamapLogo}
+          alt="Permamap"
+          style={{ height: '40px', width: 'auto', opacity: 0.6 }}
+          className="pm-fade-in"
+        />
+      </div>
+    );
+  }
+
+  // ── Tela de autenticação ──
+  if (!user) return <AuthScreen />;
 
   return (
     <div className="flex h-screen w-screen overflow-hidden" style={{ background: 'var(--pm-void)' }}>
@@ -33,35 +78,17 @@ export default function App() {
       {/* ── Left Sidebar — lista de propriedades ── */}
       <Sidebar open={sidebarOpen} width={LEFT_WIDTH} side="left">
         <SidebarHeader>
-          <div
-            style={{
-              width:          '28px',
-              height:         '28px',
-              borderRadius:   '50%',
-              display:        'flex',
-              alignItems:     'center',
-              justifyContent: 'center',
-              flexShrink:     0,
-              background:     'var(--pm-accent-muted)',
-              border:         '1.5px solid rgba(247,195,95,0.35)',
-            }}
-          >
-            <Icon name="hexagon" size={14} color="var(--pm-accent)" />
-          </div>
-          <span
-            style={{
-              fontFamily:    'var(--font-display)',
-              color:         'var(--pm-text)',
-              fontWeight:    600,
-              fontSize:      '1rem',
-              letterSpacing: '0.04em',
-            }}
-          >
-            Permamap
-          </span>
+          <img
+            src={permamapLogo}
+            alt="Permamap"
+            style={{ height: '32px', width: 'auto', display: 'block' }}
+          />
         </SidebarHeader>
 
         <PropertyListPanel />
+
+        {/* Rodapé fixo com usuário + logout */}
+        <UserFooter />
       </Sidebar>
 
       {/* ── Toggle da left sidebar ── */}
