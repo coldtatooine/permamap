@@ -416,11 +416,67 @@ body::after {
 }
 
 /* =====================
-   Toolbar — esconder labels no mobile
+   Toolbar — wrapper e layout responsivo
    ===================== */
+
+/* Desktop: centralizado, apenas botões */
+.pm-drawing-toolbar-wrapper {
+  position:        absolute;
+  top:             16px;
+  left:            50%;
+  transform:       translateX(-50%);
+  z-index:         1000;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             6px;
+}
+
+/* Mobile: barra full-width — nome à esquerda, botões à direita */
 @media (max-width: 767px) {
+  .pm-drawing-toolbar-wrapper {
+    left:            12px;
+    right:           12px;
+    transform:       none;
+    justify-content: space-between;
+  }
+
   .pm-tool-label {
     display: none;
+  }
+}
+
+/* =====================
+   Toolbar — nome da propriedade (mobile only)
+   ===================== */
+.pm-toolbar-property-name {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .pm-toolbar-property-name {
+    display:         flex;
+    align-items:     center;
+    gap:             5px;
+    padding:         4px 12px 4px 10px;
+    border-radius:   20px;
+    background:      rgba(38, 60, 40, 0.92);
+    border:          1px solid var(--pm-border-bright);
+    backdrop-filter: blur(8px);
+    font-size:       0.7rem;
+    font-weight:     600;
+    font-family:     var(--font-ui);
+    letter-spacing:  0.04em;
+    color:           var(--pm-text-2);
+    min-width:       0;
+    overflow:        hidden;
+    pointer-events:  none;
+  }
+
+  .pm-toolbar-property-name span {
+    overflow:      hidden;
+    text-overflow: ellipsis;
+    white-space:   nowrap;
   }
 }
 
@@ -450,30 +506,7 @@ body::after {
 }
 
 /* =====================
-   Mobile — Left Sidebar Overlay
-   ===================== */
-.pm-mobile-sidebar-left {
-  position:       fixed;
-  top:            0;
-  left:           0;
-  bottom:         60px;
-  width:          min(85vw, 300px);
-  z-index:        1500;
-  display:        flex;
-  flex-direction: column;
-  background:     var(--pm-panel);
-  border-right:   1px solid var(--pm-border);
-  transform:      translateX(-100%);
-  transition:     transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow:       hidden;
-}
-
-.pm-mobile-sidebar-left.open {
-  transform: translateX(0);
-}
-
-/* =====================
-   Mobile — Bottom Sheet (right panel)
+   Mobile — Bottom Sheet (ambos os painéis)
    ===================== */
 .pm-mobile-bottom-sheet {
   position:        fixed;

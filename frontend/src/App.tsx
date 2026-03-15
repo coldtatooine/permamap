@@ -22,8 +22,9 @@ export default function App() {
   const { user, isAuthReady, setSession, setAuthReady } = useAuthStore();
   const { getCurrentPosition } = useGeolocation();
   const { isMobile } = useResponsive();
-  const [sidebarOpen, setSidebarOpen]   = useState(true);
-  const [mobilePanel, setMobilePanel]   = useState<MobilePanel>('none');
+  const [sidebarOpen, setSidebarOpen]       = useState(true);
+  const [rightSidebarOpen, setRightSidebarOpen] = useState(true);
+  const [mobilePanel, setMobilePanel]       = useState<MobilePanel>('none');
   const prevPropertyId = useRef<string | null>(null);
 
   // ── Listener de autenticação ──
@@ -49,13 +50,14 @@ export default function App() {
       .catch(() => {});
   }, [user]);
 
-  // ── Mobile: abre painel direito quando propriedade é selecionada ──
+  // ── Quando propriedade muda: abre painéis e reseta estados ──
   useEffect(() => {
-    if (!isMobile) return;
     if (property && property.id !== prevPropertyId.current) {
-      setMobilePanel('right');
+      // Nova propriedade selecionada
+      setRightSidebarOpen(true);
+      if (isMobile) setMobilePanel('right');
     } else if (!property) {
-      setMobilePanel('none');
+      if (isMobile) setMobilePanel('none');
     }
     prevPropertyId.current = property?.id ?? null;
   }, [property?.id, isMobile]);
@@ -122,8 +124,9 @@ export default function App() {
           />
         )}
 
-        {/* ── Painel Esquerdo — lista de propriedades ── */}
-        <aside className={`pm-mobile-sidebar-left${mobilePanel === 'left' ? ' open' : ''}`}>
+        {/* ── Painel Esquerdo — drawer bottom sheet ── */}
+        <div className={`pm-mobile-bottom-sheet${mobilePanel === 'left' ? ' open' : ''}`}>
+          <div className="pm-sheet-handle" />
           <SidebarHeader>
             <img
               src={permamapLogo}
@@ -131,9 +134,11 @@ export default function App() {
               style={{ height: '28px', width: 'auto', display: 'block' }}
             />
           </SidebarHeader>
-          <PropertyListPanel />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            <PropertyListPanel />
+          </div>
           <UserFooter />
-        </aside>
+        </div>
 
         {/* ── Painel Direito — bottom sheet ── */}
         {property && (
@@ -192,9 +197,20 @@ export default function App() {
       </main>
 
       {/* ── Right Sidebar — configuração da propriedade ── */}
-      <Sidebar open={!!property} width={RIGHT_WIDTH} side="right">
+      <Sidebar open={!!property && rightSidebarOpen} width={RIGHT_WIDTH} side="right">
         <PropertyConfigPanel />
       </Sidebar>
+
+      {/* ── Toggle da right sidebar (só quando property selecionada) ── */}
+      {!!property && (
+        <SidebarToggle
+          open={rightSidebarOpen}
+          offset={RIGHT_WIDTH}
+          side="right"
+          onClick={() => setRightSidebarOpen(!rightSidebarOpen)}
+          title={rightSidebarOpen ? 'Fechar painel' : 'Abrir painel'}
+        />
+      )}
 
       <Wizard />
     </div>

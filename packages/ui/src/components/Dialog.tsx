@@ -30,7 +30,7 @@ export function Dialog({
   zIndex = 2000,
 }: DialogProps) {
   return (
-    <Modal open={open} onClose={loading ? undefined : onCancel} title={title} maxWidth={maxWidth} zIndex={zIndex}>
+    <Modal open={open} onClose={loading ? undefined : onCancel} title={title} maxWidth={maxWidth} zIndex={zIndex} loading={loading}>
       {typeof description === 'string' ? (
         <p className="text-[var(--pm-text-2)] text-[0.875rem] font-[var(--font-ui)] leading-relaxed">
           {description}
@@ -52,7 +52,6 @@ export function Dialog({
           <Button
             variant={variant}
             onClick={onConfirm}
-            loading={loading}
             disabled={loading}
             fullWidth
           >

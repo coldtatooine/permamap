@@ -5,6 +5,7 @@ import { ZoneBadge, Icon, Dialog } from '@permamap/ui';
 import { ElementEditForm } from '../Forms/ElementEditForm';
 import type { ZoneNumber } from '@permamap/ui';
 import type { GeoJSONGeometry } from '../../types';
+import { POI_TYPE_DEFINITIONS } from '../../types';
 
 function getElementCenter(geom: GeoJSONGeometry): [number, number] {
   if (geom.type === 'Point') {
@@ -129,9 +130,12 @@ export function ElementPanel() {
                 border:         `1.5px solid ${zone ? `${zone.color}40` : 'var(--pm-border-bright)'}`,
                 color:          zone?.color ?? 'var(--pm-text-3)',
               }}>
-                {meta && (
-                  <Icon name={meta.iconName} size={13} color="currentColor" />
-                )}
+                {el.type === 'poi' && el.metadata_json.poi_type && POI_TYPE_DEFINITIONS[el.metadata_json.poi_type]
+                  ? <span style={{ fontSize: '13px', lineHeight: 1 }}>
+                      {POI_TYPE_DEFINITIONS[el.metadata_json.poi_type].emoji}
+                    </span>
+                  : meta && <Icon name={meta.iconName} size={13} color="currentColor" />
+                }
               </div>
 
               {/* Texto */}

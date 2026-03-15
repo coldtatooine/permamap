@@ -147,12 +147,27 @@ export function SidebarSection({ children, bordered = true, className, style }: 
 
 export interface SidebarToggleProps {
   open:     boolean;
-  offset:   number;      // posição left em px (= width da sidebar quando aberta)
+  offset:   number;      // distância da borda (px) quando a sidebar está aberta
   onClick:  () => void;
   title?:   string;
+  side?:    'left' | 'right';
 }
 
-export function SidebarToggle({ open, offset, onClick, title }: SidebarToggleProps) {
+export function SidebarToggle({ open, offset, onClick, title, side = 'left' }: SidebarToggleProps) {
+  const isRight = side === 'right';
+
+  const positionStyle = isRight
+    ? { right: open ? offset : 0, transition: 'right 0.3s cubic-bezier(0.4, 0, 0.2, 1)' }
+    : { left:  open ? offset : 0, transition: 'left  0.3s cubic-bezier(0.4, 0, 0.2, 1)' };
+
+  // Esquerda: aberto=← fechado=→  |  Direita: aberto=→ fechado=←
+  const chevronOpen  = isRight
+    ? <polyline points="9 18 15 12 9 6" />   /* → */
+    : <polyline points="15 18 9 12 15 6" />;  /* ← */
+  const chevronClosed = isRight
+    ? <polyline points="15 18 9 12 15 6" />  /* ← */
+    : <polyline points="9 18 15 12 9 6" />;   /* → */
+
   return (
     <button
       onClick={onClick}
@@ -161,28 +176,24 @@ export function SidebarToggle({ open, offset, onClick, title }: SidebarTogglePro
         position:       'absolute',
         top:            '50%',
         transform:      'translateY(-50%)',
-        left:           open ? offset : 0,
         zIndex:         1500,
         width:          '14px',
         height:         '44px',
         background:     'var(--pm-panel)',
         border:         '1px solid var(--pm-border-bright)',
-        borderLeft:     'none',
-        borderRadius:   '0 6px 6px 0',
+        borderRight:    isRight ? 'none' : undefined,
+        borderLeft:     isRight ? undefined : 'none',
+        borderRadius:   isRight ? '6px 0 0 6px' : '0 6px 6px 0',
         cursor:         'pointer',
         display:        'flex',
         alignItems:     'center',
         justifyContent: 'center',
-        transition:     'left 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        ...positionStyle,
       }}
     >
-      {/* Chevron inline — sem importar Icon para evitar dependência circular */}
       <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
         stroke="var(--pm-text-3)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        {open
-          ? <polyline points="15 18 9 12 15 6" />
-          : <polyline points="9 18 15 12 9 6" />
-        }
+        {open ? chevronOpen : chevronClosed}
       </svg>
     </button>
   );

@@ -110,6 +110,9 @@ export function POIForm({ onClose }: Props) {
                           type="button"
                           onClick={() => setPoiType(t)}
                           style={{
+                            display:       'flex',
+                            alignItems:    'center',
+                            gap:           '5px',
                             padding:       '5px 12px',
                             borderRadius:  '20px',
                             border:        `1.5px solid ${selected ? 'var(--pm-accent)' : 'var(--pm-border-bright)'}`,
@@ -123,6 +126,9 @@ export function POIForm({ onClose }: Props) {
                             whiteSpace:    'nowrap',
                           }}
                         >
+                          <span style={{ fontSize: '0.9rem', lineHeight: 1 }}>
+                            {POI_TYPE_DEFINITIONS[t].emoji}
+                          </span>
                           {POI_TYPE_DEFINITIONS[t].label}
                         </button>
                       );
@@ -215,7 +221,7 @@ export function POIForm({ onClose }: Props) {
                 background:     selectedZone ? `${selectedZone.color}18` : 'var(--pm-card)',
                 border:         `1.5px solid ${selectedZone ? `${selectedZone.color}50` : 'var(--pm-border-bright)'}`,
               }}>
-                <span style={{ fontSize: '12px', color: selectedZone?.color ?? 'var(--pm-accent)' }}>⬟</span>
+                <span style={{ fontSize: '14px', lineHeight: 1 }}>{def?.emoji}</span>
               </div>
               <div>
                 <div style={{

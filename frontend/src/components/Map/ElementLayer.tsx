@@ -1,20 +1,10 @@
 import { Marker, Polygon, Tooltip } from 'react-leaflet';
 import L from 'leaflet';
 import { useMapStore } from '../../store/useMapStore';
+import { POI_TYPE_DEFINITIONS } from '../../types';
 import type { Element, GeoJSONPoint, GeoJSONPolygon } from '../../types';
 
-const POI_ICONS: Record<string, string> = {
-  Casa: '🏠',
-  Horta: '🌱',
-  Agrofloresta: '🌳',
-  Galinheiro: '🐔',
-  Pasto: '🐄',
-  Apiário: '🐝',
-  Compostagem: '♻️',
-  Reservatório: '💧',
-  Infraestrutura: '🔧',
-  default: '📍',
-};
+const FALLBACK_EMOJI = '📍';
 
 function makeIcon(emoji: string) {
   const html = `
@@ -74,8 +64,8 @@ export function ElementLayer() {
 function POIMarker({ element }: { element: Element }) {
   const geom = element.geometry_geojson as GeoJSONPoint;
   const [lng, lat] = geom.coordinates;
-  const poiType = element.metadata_json.poi_type ?? 'default';
-  const emoji = POI_ICONS[poiType] ?? POI_ICONS.default;
+  const poiType = element.metadata_json.poi_type;
+  const emoji   = poiType ? (POI_TYPE_DEFINITIONS[poiType]?.emoji ?? FALLBACK_EMOJI) : FALLBACK_EMOJI;
 
   return (
     <Marker position={[lat, lng]} icon={makeIcon(emoji)}>
