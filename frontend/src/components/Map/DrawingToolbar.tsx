@@ -43,7 +43,7 @@ export function DrawingToolbar({ onActivate }: Props) {
             title={mode === 'zone' && !canAddZone ? 'Máximo de 5 zonas atingido' : label}
           >
             <Icon name={icon} size={15} color={iconColor} />
-            {label}
+            <span className="pm-tool-label">{label}</span>
           </ToolButton>
         );
       })}

@@ -102,7 +102,7 @@ export function MapView() {
       <DrawingToolbar onActivate={handleActivate} />
 
       {/* Botão de localização – canto inferior direito */}
-      <div className="absolute bottom-6 right-4 z-1000 flex flex-col items-end gap-2">
+      <div className="absolute right-4 z-1000 flex flex-col items-end gap-2 pm-map-controls">
         {locateError && (
           <div className="text-xs px-3 py-1.5 rounded-lg shadow max-w-48 text-right"
             style={{ background: 'var(--pm-panel)', border: '1px solid var(--pm-danger)', color: 'var(--pm-danger)' }}>

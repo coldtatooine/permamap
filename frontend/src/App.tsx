@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MapView } from './components/Map/MapView';
 import { PropertyListPanel } from './components/Sidebar/PropertyListPanel';
 import { PropertyConfigPanel } from './components/Sidebar/PropertyConfigPanel';
 import { Wizard } from './components/UI/Wizard';
+import { MobileNav, type MobilePanel } from './components/UI/MobileNav';
 import { AuthScreen } from './components/Auth/AuthScreen';
 import { useMapStore } from './store/useMapStore';
 import { useAuthStore } from './store/useAuthStore';
 import { useGeolocation } from './hooks/useGeolocation';
+import { useResponsive } from './hooks/useResponsive';
 import { supabase } from './lib/supabase';
 import { Sidebar, SidebarHeader, SidebarToggle } from '@permamap/ui';
 import { UserFooter } from './components/Sidebar/UserFooter';
@@ -19,9 +21,12 @@ export default function App() {
   const { property, isLoading } = useMapStore();
   const { user, isAuthReady, setSession, setAuthReady } = useAuthStore();
   const { getCurrentPosition } = useGeolocation();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isMobile } = useResponsive();
+  const [sidebarOpen, setSidebarOpen]   = useState(true);
+  const [mobilePanel, setMobilePanel]   = useState<MobilePanel>('none');
+  const prevPropertyId = useRef<string | null>(null);
 
-  // ── Listener de autenticação — deve ser o primeiro efeito ──
+  // ── Listener de autenticação ──
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
@@ -32,7 +37,7 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // ── Geolocalização — só executa após autenticação ──
+  // ── Geolocalização ──
   useEffect(() => {
     if (!user) return;
     getCurrentPosition()
@@ -44,17 +49,28 @@ export default function App() {
       .catch(() => {});
   }, [user]);
 
-  // ── Loading enquanto o Supabase resolve a sessão ──
+  // ── Mobile: abre painel direito quando propriedade é selecionada ──
+  useEffect(() => {
+    if (!isMobile) return;
+    if (property && property.id !== prevPropertyId.current) {
+      setMobilePanel('right');
+    } else if (!property) {
+      setMobilePanel('none');
+    }
+    prevPropertyId.current = property?.id ?? null;
+  }, [property?.id, isMobile]);
+
+  // ── Loading — Supabase resolvendo sessão ──
   if (!isAuthReady) {
     return (
       <div
         style={{
-          position:        'fixed',
-          inset:           0,
-          background:      'var(--pm-void)',
-          display:         'flex',
-          alignItems:      'center',
-          justifyContent:  'center',
+          position:       'fixed',
+          inset:          0,
+          background:     'var(--pm-void)',
+          display:        'flex',
+          alignItems:     'center',
+          justifyContent: 'center',
         }}
       >
         <img
@@ -67,12 +83,86 @@ export default function App() {
     );
   }
 
-  // ── Tela de autenticação ──
   if (!user) return <AuthScreen />;
 
+  // ════════════════════════════════════════════════
+  //  Layout Mobile (< 768px)
+  // ════════════════════════════════════════════════
+  if (isMobile) {
+    return (
+      <div
+        style={{
+          position:   'relative',
+          height:     '100dvh',
+          overflow:   'hidden',
+          background: 'var(--pm-void)',
+        }}
+      >
+        {isLoading && <div className="pm-top-progress" />}
+
+        {/* ── Mapa — ocupa toda a tela exceto nav ── */}
+        <main
+          style={{
+            position: 'absolute',
+            top:      0,
+            left:     0,
+            right:    0,
+            bottom:   '60px',  /* altura da nav */
+          }}
+        >
+          <MapView />
+        </main>
+
+        {/* ── Backdrop — fecha painéis ao tocar fora ── */}
+        {mobilePanel !== 'none' && (
+          <div
+            className="pm-mobile-backdrop"
+            onClick={() => setMobilePanel('none')}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* ── Painel Esquerdo — lista de propriedades ── */}
+        <aside className={`pm-mobile-sidebar-left${mobilePanel === 'left' ? ' open' : ''}`}>
+          <SidebarHeader>
+            <img
+              src={permamapLogo}
+              alt="Permamap"
+              style={{ height: '28px', width: 'auto', display: 'block' }}
+            />
+          </SidebarHeader>
+          <PropertyListPanel />
+          <UserFooter />
+        </aside>
+
+        {/* ── Painel Direito — bottom sheet ── */}
+        {property && (
+          <div className={`pm-mobile-bottom-sheet${mobilePanel === 'right' ? ' open' : ''}`}>
+            {/* Handle de arraste visual */}
+            <div className="pm-sheet-handle" />
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+              <PropertyConfigPanel />
+            </div>
+          </div>
+        )}
+
+        {/* ── Navegação inferior ── */}
+        <MobileNav
+          activePanel={mobilePanel}
+          onPanel={setMobilePanel}
+          hasProperty={!!property}
+        />
+
+        <Wizard />
+      </div>
+    );
+  }
+
+  // ════════════════════════════════════════════════
+  //  Layout Desktop / Tablet (≥ 768px)
+  // ════════════════════════════════════════════════
   return (
     <div className="flex h-screen w-screen overflow-hidden" style={{ background: 'var(--pm-void)' }}>
-      {/* ── Global Top Progress Bar ── */}
       {isLoading && <div className="pm-top-progress" />}
 
       {/* ── Left Sidebar — lista de propriedades ── */}
@@ -84,10 +174,7 @@ export default function App() {
             style={{ height: '32px', width: 'auto', display: 'block' }}
           />
         </SidebarHeader>
-
         <PropertyListPanel />
-
-        {/* Rodapé fixo com usuário + logout */}
         <UserFooter />
       </Sidebar>
 
@@ -104,12 +191,11 @@ export default function App() {
         <MapView />
       </main>
 
-      {/* ── Right Sidebar — configuração da propriedade selecionada ── */}
+      {/* ── Right Sidebar — configuração da propriedade ── */}
       <Sidebar open={!!property} width={RIGHT_WIDTH} side="right">
         <PropertyConfigPanel />
       </Sidebar>
 
-      {/* ── Wizard overlay ── */}
       <Wizard />
     </div>
   );
