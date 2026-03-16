@@ -396,10 +396,46 @@ body::after {
 /* Logo mobile: oculto por padrão (painel de marca está visível) */
 .auth-logo-mobile { display: none; }
 
-/* Em telas pequenas: ocultar painel de marca, exibir logo mobile */
+/* Card wrapper: transparente no desktop — recebe estilo de modal no mobile */
+.auth-form-card {
+  width:   100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Tablet (768–1023px): reduz o painel de marca para dar mais espaço ao formulário */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .auth-brand-panel {
+    width:     36%;
+    min-width: 260px;
+    max-width: 360px;
+    padding:   36px 28px;
+  }
+}
+
+/* Mobile (≤ 767px): oculta painel de marca, exibe logo e envolve o form em card modal */
 @media (max-width: 767px) {
-  .auth-brand-panel  { display: none !important; }
-  .auth-logo-mobile  { display: block; }
+  .auth-brand-panel { display: none !important; }
+  .auth-logo-mobile { display: block; }
+
+  .auth-panel-right {
+    padding:        20px 16px !important;
+    justify-content: flex-start !important;
+    padding-top:    48px !important;
+  }
+
+  /* Card com estilo de modal — mesmos tokens de .pm-modal */
+  .auth-form-card {
+    width:         100%;
+    max-width:     420px;
+    background:    var(--pm-panel);
+    border:        1px solid var(--pm-border-bright);
+    border-radius: 16px;
+    padding:       32px 28px;
+    box-shadow:    0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(247, 195, 95, 0.06);
+    overflow:      hidden;
+    position:      relative;
+  }
 }
 
 /* =====================

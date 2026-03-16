@@ -31,19 +31,19 @@ export function LoginScreen({ onSwitchToRegister }: LoginScreenProps) {
   }
 
   return (
-    <div className="pm-animate-in" style={{ width: '100%', maxWidth: '380px', position: 'relative', overflow: 'hidden' }}>
+    <div className="pm-animate-in" style={{ width: '100%', maxWidth: '420px', position: 'relative', overflow: 'hidden' }}>
       {loading && <div className="pm-modal-progress" />}
 
-      {/* Heading */}
-      <div style={{ marginBottom: '36px' }}>
+      {/* Heading — tipografia alinhada ao padrão de títulos dos modais */}
+      <div style={{ marginBottom: '28px' }}>
         <h2
           style={{
             fontFamily:    'var(--font-display)',
-            fontSize:      '1.875rem',
-            fontWeight:    600,
+            fontSize:      'clamp(1.375rem, 3vw, 1.875rem)',
+            fontWeight:    700,
             color:         'var(--pm-text)',
-            lineHeight:    1.2,
-            letterSpacing: '-0.01em',
+            lineHeight:    1.25,
+            letterSpacing: '-0.02em',
           }}
         >
           Bem-vindo de volta
@@ -54,6 +54,7 @@ export function LoginScreen({ onSwitchToRegister }: LoginScreenProps) {
             fontSize:   '0.875rem',
             color:      'var(--pm-text-2)',
             marginTop:  '8px',
+            lineHeight: 1.6,
           }}
         >
           Acesse sua conta para continuar mapeando
@@ -66,7 +67,11 @@ export function LoginScreen({ onSwitchToRegister }: LoginScreenProps) {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Campos com gap: 16px — padrão dos form modals da área logada */}
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+      >
         <Input
           label="Email"
           type="email"
@@ -84,15 +89,13 @@ export function LoginScreen({ onSwitchToRegister }: LoginScreenProps) {
           placeholder="••••••••"
           autoComplete="current-password"
         />
-        <div style={{ paddingTop: '4px' }}>
-          <Button type="submit" disabled={loading} fullWidth>
-            Entrar
-          </Button>
-        </div>
+        <Button type="submit" disabled={loading} fullWidth>
+          Entrar
+        </Button>
       </form>
 
-      {/* Switch para cadastro */}
-      <p style={{ marginTop: '28px', textAlign: 'center', fontSize: '0.875rem', color: 'var(--pm-text-2)' }}>
+      {/* Switch para cadastro — marginTop alinhado ao ModalFooter (24px) */}
+      <p style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.875rem', color: 'var(--pm-text-2)' }}>
         Não tem uma conta?{' '}
         <SwitchLink onClick={onSwitchToRegister}>Criar conta →</SwitchLink>
       </p>

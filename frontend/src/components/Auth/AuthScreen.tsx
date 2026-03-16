@@ -220,13 +220,14 @@ export function AuthScreen() {
           PAINEL DIREITO — Formulário
           ══════════════════════════════════════════════════════ */}
       <div
+        className="auth-panel-right"
         style={{
           flex:            1,
           display:         'flex',
           flexDirection:   'column',
           alignItems:      'center',
           justifyContent:  'center',
-          padding:         '40px 24px',
+          padding:         'clamp(32px, 5vw, 60px) clamp(20px, 4vw, 40px)',
           overflowY:       'auto',
           background:      'var(--pm-void)',
           // Separador sutil à esquerda (visível apenas quando o painel de marca está presente)
@@ -234,14 +235,17 @@ export function AuthScreen() {
         }}
       >
         {/* Logo mobile — visível apenas quando painel de marca está oculto */}
-        <div className="auth-logo-mobile" style={{ marginBottom: '32px' }}>
-          <img src={permamapLogo} alt="Permamap" style={{ height: '36px', width: 'auto' }} />
+        <div className="auth-logo-mobile" style={{ marginBottom: '28px' }}>
+          <img src={permamapLogo} alt="Permamap" style={{ height: '32px', width: 'auto' }} />
         </div>
 
-        {mode === 'login'
-          ? <LoginScreen    onSwitchToRegister={() => setMode('register')} />
-          : <RegisterScreen onSwitchToLogin={() => setMode('login')} />
-        }
+        {/* Card wrapper — transparente no desktop, modal-like no mobile */}
+        <div className="auth-form-card">
+          {mode === 'login'
+            ? <LoginScreen    onSwitchToRegister={() => setMode('register')} />
+            : <RegisterScreen onSwitchToLogin={() => setMode('login')} />
+          }
+        </div>
       </div>
     </div>
   );
