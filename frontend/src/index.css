@@ -403,6 +403,56 @@ body::after {
 }
 
 /* =====================
+   Zone Type Picker — dropdown sob "Criar Zona"
+   ===================== */
+.pm-zone-type-picker {
+  position:        absolute;
+  top:             calc(100% + 8px);
+  left:            0;
+  z-index:         1100;
+  display:         flex;
+  flex-direction:  column;
+  gap:             3px;
+  padding:         5px;
+  min-width:       130px;
+  background:      rgba(38, 60, 40, 0.97);
+  border:          1px solid var(--pm-border-bright);
+  border-radius:   10px;
+  box-shadow:      0 8px 24px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+}
+
+.pm-zone-type-option {
+  display:        flex;
+  align-items:    center;
+  gap:            8px;
+  width:          100%;
+  padding:        7px 10px;
+  border:         none;
+  border-radius:  7px;
+  background:     transparent;
+  color:          var(--pm-text-2);
+  font-size:      0.8rem;
+  font-family:    var(--font-ui);
+  font-weight:    500;
+  cursor:         pointer;
+  text-align:     left;
+  transition:     background 0.15s ease, color 0.15s ease;
+  white-space:    nowrap;
+}
+
+.pm-zone-type-option:hover {
+  background: var(--pm-card-hover);
+  color:      var(--pm-text);
+}
+
+.pm-zone-type-emoji {
+  font-size:   1rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* =====================
    Botão de localização — offset responsivo
    ===================== */
 .pm-map-controls {

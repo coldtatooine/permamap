@@ -23,6 +23,21 @@ L.Icon.Default.mergeOptions({
 });
 
 const DEFAULT_CENTER: [number, number] = [-15.7801, -47.9292]; // Brasília
+
+// Converte centro + raio (metros) em polígono GeoJSON aproximado
+function circleToPolygon(lat: number, lng: number, radiusM: number, numPoints = 64): GeoJSONPolygon {
+  const M_PER_DEG_LAT = 111319.5;
+  const M_PER_DEG_LNG = 111319.5 * Math.cos(lat * Math.PI / 180);
+  const coords: [number, number][] = [];
+  for (let i = 0; i <= numPoints; i++) {
+    const angle = (i * 2 * Math.PI) / numPoints;
+    coords.push([
+      lng + (radiusM / M_PER_DEG_LNG) * Math.sin(angle),
+      lat + (radiusM / M_PER_DEG_LAT) * Math.cos(angle),
+    ]);
+  }
+  return { type: 'Polygon', coordinates: [coords] };
+}
 const DEFAULT_ZOOM = 13;
 
 export function MapView() {
@@ -42,7 +57,7 @@ export function MapView() {
   }
 
   function handleGeometryCreated(geom: GeoJSONGeometry) {
-    if (drawingMode === 'zone') {
+    if (drawingMode === 'zone' || drawingMode === 'zone-circle') {
       setPendingGeometry(geom);
       setShowZoneForm(true);
     } else if (drawingMode === 'poi') {
@@ -209,7 +224,10 @@ function DrawingController({
 
       let geom: GeoJSONGeometry | null = null;
 
-      if (layer instanceof L.Polygon) {
+      if (layer instanceof L.Circle) {
+        const center = layer.getLatLng();
+        geom = circleToPolygon(center.lat, center.lng, layer.getRadius());
+      } else if (layer instanceof L.Polygon) {
         const latlngs = layer.getLatLngs()[0] as L.LatLng[];
         const coords = latlngs.map((ll) => [ll.lng, ll.lat] as [number, number]);
         coords.push(coords[0]); // fecha o anel
@@ -229,6 +247,10 @@ function DrawingController({
     // Inicia desenho
     if (mode === 'zone') {
       drawRef.current = new L.Draw.Polygon(map as L.DrawMap, {
+        shapeOptions: { color: '#F7C35F', fillOpacity: 0.15 },
+      });
+    } else if (mode === 'zone-circle') {
+      drawRef.current = new L.Draw.Circle(map as L.DrawMap, {
         shapeOptions: { color: '#F7C35F', fillOpacity: 0.15 },
       });
     } else if (mode === 'poi') {

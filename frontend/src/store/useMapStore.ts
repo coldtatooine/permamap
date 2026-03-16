@@ -11,7 +11,7 @@ import type {
 } from '../types';
 import { ZONE_COLORS as COLORS } from '../types';
 
-export type DrawingMode = 'zone' | 'poi' | 'fence' | null;
+export type DrawingMode = 'zone' | 'zone-circle' | 'poi' | 'fence' | null;
 export type WizardStep = 'property' | 'location' | 'zone0' | 'zones' | 'elements' | 'done';
 
 interface MapStore {

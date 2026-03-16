@@ -11,7 +11,7 @@ interface Props {
 }
 
 export function POIForm({ onClose }: Props) {
-  const { zones, pendingGeometry, setPendingGeometry } = useMapStore();
+  const { zones, activeZoneId, pendingGeometry, setPendingGeometry } = useMapStore();
   const { createElement } = useProperty();
 
   // ── Controle de etapas ──────────────────────────────────────────────────
@@ -19,8 +19,9 @@ export function POIForm({ onClose }: Props) {
   const [poiType, setPoiType] = useState<POIType | null>(null);
 
   // ── Campos do formulário (etapa 2) ──────────────────────────────────────
+  // Prioriza a zona ativa no mapa; fallback para a primeira da lista
   const [name,    setName]    = useState('');
-  const [zoneId,  setZoneId]  = useState(zones[0]?.id ?? '');
+  const [zoneId,  setZoneId]  = useState(activeZoneId ?? zones[0]?.id ?? '');
   const [notes,   setNotes]   = useState('');
   const [areaM2,  setAreaM2]  = useState('');
   const [error,   setError]   = useState('');
