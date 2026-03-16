@@ -12,7 +12,7 @@ import type {
 import { ZONE_COLORS as COLORS } from '../types';
 
 export type DrawingMode = 'zone' | 'zone-circle' | 'poi' | 'fence' | null;
-export type WizardStep = 'property' | 'location' | 'zone0' | 'zones' | 'elements' | 'done';
+export type WizardStep = 'property' | 'zone0' | 'zones' | 'elements' | 'done';
 
 interface MapStore {
   // Estado
@@ -23,6 +23,8 @@ interface MapStore {
   drawingMode: DrawingMode;
   wizardStep: WizardStep;
   isWizardOpen: boolean;
+  isPlacingProperty: boolean;
+  pendingPropertyLocation: [number, number] | null;  // [lat, lng] clicado no mapa
   pendingGeometry: GeoJSONGeometry | null;
   pendingFlyTo: [number, number] | null;   // [lat, lng] para o mapa voar
   userLocation: [number, number] | null;   // posição GPS do usuário
@@ -71,6 +73,11 @@ interface MapStore {
   openWizard: () => void;
   closeWizard: () => void;
 
+  // Placement mode (Nova Propriedade)
+  startPlacingProperty: () => void;
+  cancelPlacingProperty: () => void;
+  confirmPropertyLocation: (lat: number, lng: number) => void;
+
   // UI
   setLoading: (v: boolean) => void;
   setError: (msg: string | null) => void;
@@ -84,6 +91,8 @@ export const useMapStore = create<MapStore>((set, get) => ({
   drawingMode: null,
   wizardStep: 'property',
   isWizardOpen: false,
+  isPlacingProperty: false,
+  pendingPropertyLocation: null,
   pendingGeometry: null,
   pendingFlyTo: null,
   userLocation: null,
@@ -180,7 +189,17 @@ export const useMapStore = create<MapStore>((set, get) => ({
 
   setWizardStep: (wizardStep) => set({ wizardStep }),
   openWizard: () => set({ isWizardOpen: true, wizardStep: 'property' }),
-  closeWizard: () => set({ isWizardOpen: false }),
+  closeWizard: () => set({ isWizardOpen: false, pendingPropertyLocation: null }),
+
+  startPlacingProperty: () => set({ isPlacingProperty: true }),
+  cancelPlacingProperty: () => set({ isPlacingProperty: false }),
+  confirmPropertyLocation: (lat, lng) => set({
+    isPlacingProperty: false,
+    pendingPropertyLocation: [lat, lng],
+    pendingFlyTo: [lat, lng],
+    isWizardOpen: true,
+    wizardStep: 'property',
+  }),
 
   setLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),

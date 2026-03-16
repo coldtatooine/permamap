@@ -41,7 +41,7 @@ function circleToPolygon(lat: number, lng: number, radiusM: number, numPoints = 
 const DEFAULT_ZOOM = 13;
 
 export function MapView() {
-  const { drawingMode, setDrawingMode, setPendingGeometry, property } = useMapStore();
+  const { drawingMode, setDrawingMode, setPendingGeometry, property, isPlacingProperty, cancelPlacingProperty } = useMapStore();
   const { getCurrentPosition } = useGeolocation();
   const [showZoneForm, setShowZoneForm] = useState(false);
   const [showPOIForm, setShowPOIForm] = useState(false);
@@ -112,6 +112,7 @@ export function MapView() {
         <UserLocationMarker />
         <DrawingController mode={drawingMode} onCreated={handleGeometryCreated} />
         <MapFlyController />
+        <PropertyPlacer />
       </MapContainer>
 
       <DrawingToolbar onActivate={handleActivate} />
@@ -151,6 +152,21 @@ export function MapView() {
         </button>
       </div>
 
+      {/* Hint de posicionamento de propriedade */}
+      {isPlacingProperty && (
+        <div className="pm-placement-hint pm-animate-in">
+          <Icon name="map-pin" size={15} color="var(--pm-accent)" />
+          <span>Clique no mapa para definir a localização da propriedade</span>
+          <button
+            className="pm-placement-hint-close"
+            onClick={cancelPlacingProperty}
+            title="Cancelar"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       {showZoneForm && <ZoneForm onClose={() => setShowZoneForm(false)} />}
       {showPOIForm && <POIForm onClose={() => setShowPOIForm(false)} />}
     </div>
@@ -180,6 +196,34 @@ function MapFlyController() {
     const [lng, lat] = propertyLocation.coordinates;
     map.flyTo([lat, lng], 15, { animate: true, duration: 1.2 });
   }, [propertyLocation, map]);
+
+  return null;
+}
+
+// Captura clique no mapa para posicionar nova propriedade
+function PropertyPlacer() {
+  const isPlacingProperty = useMapStore((s) => s.isPlacingProperty);
+  const map = useMapEvents({
+    click(e) {
+      if (!isPlacingProperty) return;
+      useMapStore.getState().confirmPropertyLocation(e.latlng.lat, e.latlng.lng);
+    },
+  });
+
+  useEffect(() => {
+    const container = map.getContainer();
+    container.style.cursor = isPlacingProperty ? 'crosshair' : '';
+    return () => { container.style.cursor = ''; };
+  }, [isPlacingProperty, map]);
+
+  useEffect(() => {
+    if (!isPlacingProperty) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') useMapStore.getState().cancelPlacingProperty();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [isPlacingProperty]);
 
   return null;
 }

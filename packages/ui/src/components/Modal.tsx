@@ -63,7 +63,14 @@ export function Modal({
         {/* Barra neon de loading — clipada pelo border-radius do modal */}
         {loading && <div className="pm-modal-progress" />}
         {title && (
-          <h2 className="font-['Lora'] text-lg font-bold text-[var(--pm-text)] mb-5 leading-snug">
+          <h2 style={{
+            fontFamily:   'var(--font-display)',
+            fontSize:     '1.125rem',
+            fontWeight:   700,
+            color:        'var(--pm-text)',
+            marginBottom: '20px',
+            lineHeight:   1.3,
+          }}>
             {title}
           </h2>
         )}
@@ -79,7 +86,14 @@ export function Modal({
 
 export function ModalFooter({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-2 mt-6 pt-5 border-t border-[var(--pm-border)]">
+    <div style={{
+      display:       'flex',
+      flexDirection: 'column',
+      gap:           '8px',
+      marginTop:     '24px',
+      paddingTop:    '20px',
+      borderTop:     '1px solid var(--pm-border)',
+    }}>
       {children}
     </div>
   );

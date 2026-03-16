@@ -10,6 +10,7 @@ import {
   Icon,
   Dialog,
 } from '@permamap/ui';
+
 import { ZonePanel } from './ZonePanel';
 import { ElementPanel } from './ElementPanel';
 import type { SidebarTab } from '@permamap/ui';
@@ -20,7 +21,7 @@ const TABS: SidebarTab[] = [
 ];
 
 export function PropertyConfigPanel() {
-  const { property, isLoading, clearProperty } = useMapStore();
+  const { property, isLoading } = useMapStore();
   const { deleteProperty: del } = useProperty();
 
   const [tab, setTab] = useState('zonas');
@@ -32,32 +33,8 @@ export function PropertyConfigPanel() {
 
   return (
     <>
-      {/* Cabeçalho: nome + botão voltar */}
+      {/* Cabeçalho: nome da propriedade */}
       <SidebarHeader>
-        <button
-          onClick={clearProperty}
-          title="Voltar à lista"
-          style={{
-            background:  'none',
-            border:      'none',
-            cursor:      'pointer',
-            padding:     '4px',
-            borderRadius: '6px',
-            color:       'var(--pm-text-3)',
-            display:     'flex',
-            alignItems:  'center',
-            flexShrink:  0,
-            transition:  'color 0.15s ease',
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--pm-text)')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--pm-text-3)')}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-        </button>
-
         <div style={{ flex: 1, minWidth: 0 }}>
           <p className="pm-label" style={{ marginBottom: '1px' }}>Propriedade</p>
           <p style={{

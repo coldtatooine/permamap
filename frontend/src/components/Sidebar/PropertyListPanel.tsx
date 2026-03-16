@@ -5,7 +5,7 @@ import { Button, SidebarSection, SidebarContent, Icon } from '@permamap/ui';
 import type { Property } from '../../types';
 
 export function PropertyListPanel() {
-  const { property, openWizard } = useMapStore();
+  const { property, startPlacingProperty } = useMapStore();
   const { listProperties, loadProperty } = useProperty();
   const [properties, setProperties] = useState<Property[]>([]);
 
@@ -18,7 +18,7 @@ export function PropertyListPanel() {
   return (
     <>
       <SidebarSection>
-        <Button onClick={() => openWizard()}>+ Nova Propriedade</Button>
+        <Button onClick={() => startPlacingProperty()}>+ Nova Propriedade</Button>
       </SidebarSection>
 
       <SidebarContent>

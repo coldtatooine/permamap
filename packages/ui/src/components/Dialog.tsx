@@ -32,7 +32,12 @@ export function Dialog({
   return (
     <Modal open={open} onClose={loading ? undefined : onCancel} title={title} maxWidth={maxWidth} zIndex={zIndex} loading={loading}>
       {typeof description === 'string' ? (
-        <p className="text-[var(--pm-text-2)] text-[0.875rem] font-[var(--font-ui)] leading-relaxed">
+        <p style={{
+          color:      'var(--pm-text-2)',
+          fontSize:   '0.875rem',
+          fontFamily: 'var(--font-ui)',
+          lineHeight: 1.6,
+        }}>
           {description}
         </p>
       ) : (
