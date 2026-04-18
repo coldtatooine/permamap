@@ -12,14 +12,16 @@ import { useResponsive } from './hooks/useResponsive';
 import { supabase } from './lib/supabase';
 import { Sidebar, SidebarHeader, SidebarToggle } from '@permamap/ui';
 import { UserFooter } from './components/Sidebar/UserFooter';
+import { UniversityAdmin } from './components/University/Admin/UniversityAdmin';
+import { UniversityView } from './components/University/UniversityView';
 import permamapLogo from './assets/permamap-logo-full.svg';
 
 const LEFT_WIDTH  = 220;
 const RIGHT_WIDTH = 280;
 
 export default function App() {
-  const { property, isLoading } = useMapStore();
-  const { user, isAuthReady, setSession, setAuthReady } = useAuthStore();
+  const { property, isLoading, activePanel, setActivePanel } = useMapStore();
+  const { user, isAuthReady, isAdmin, setSession, setAuthReady } = useAuthStore();
   const { getCurrentPosition } = useGeolocation();
   const { isMobile } = useResponsive();
   const [sidebarOpen, setSidebarOpen]       = useState(true);
@@ -30,9 +32,19 @@ export default function App() {
   // ── Listener de autenticação ──
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      async (_event, session) => {
         setSession(session);
         setAuthReady();
+        if (session !== null) {
+          const { data } = await supabase
+            .from('users')
+            .select('is_admin')
+            .eq('id', session.user.id)
+            .maybeSingle();
+          useAuthStore.getState().setIsAdmin(data?.is_admin ?? false);
+        } else {
+          useAuthStore.getState().setIsAdmin(false);
+        }
       },
     );
     return () => subscription.unsubscribe();
@@ -102,7 +114,7 @@ export default function App() {
       >
         {isLoading && <div className="pm-top-progress" />}
 
-        {/* ── Mapa — ocupa toda a tela exceto nav ── */}
+        {/* ── Conteúdo principal — Mapa ou Permamap U ── */}
         <main
           style={{
             position: 'absolute',
@@ -112,7 +124,10 @@ export default function App() {
             bottom:   '60px',  /* altura da nav */
           }}
         >
-          <MapView />
+          {activePanel === 'university'
+            ? (isAdmin ? <UniversityAdmin /> : <UniversityView />)
+            : <MapView />
+          }
         </main>
 
         {/* ── Backdrop — fecha painéis ao tocar fora ── */}
@@ -137,6 +152,13 @@ export default function App() {
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             <PropertyListPanel />
           </div>
+          <button
+            className="pm-btn pm-btn-ghost"
+            onClick={() => setActivePanel(activePanel === 'university' ? 'map' : 'university')}
+            style={{ margin: '8px 12px', fontSize: '13px' }}
+          >
+            {activePanel === 'university' ? '← Mapa' : '🎓 Permamap U'}
+          </button>
           <UserFooter />
         </div>
 
@@ -180,6 +202,13 @@ export default function App() {
           />
         </SidebarHeader>
         <PropertyListPanel />
+        <button
+          className="pm-btn pm-btn-ghost"
+          onClick={() => setActivePanel(activePanel === 'university' ? 'map' : 'university')}
+          style={{ margin: '8px 12px', fontSize: '13px' }}
+        >
+          {activePanel === 'university' ? '← Mapa' : '🎓 Permamap U'}
+        </button>
         <UserFooter />
       </Sidebar>
 
@@ -191,9 +220,12 @@ export default function App() {
         title={sidebarOpen ? 'Fechar painel' : 'Abrir painel'}
       />
 
-      {/* ── Mapa ── */}
+      {/* ── Conteúdo principal — Mapa ou Permamap U ── */}
       <main className="flex-1 relative overflow-hidden">
-        <MapView />
+        {activePanel === 'university'
+          ? (isAdmin ? <UniversityAdmin /> : <UniversityView />)
+          : <MapView />
+        }
       </main>
 
       {/* ── Right Sidebar — configuração da propriedade ── */}

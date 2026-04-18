@@ -1,4 +1,9 @@
 {
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+    "OTEL_METRICS_EXPORTER": "otlp"
+  },
   "permissions": {
     "allow": [
       "Bash(npx supabase --version)",
@@ -7,7 +12,20 @@
       "Bash(npx tsc:*)",
       "Bash(node_modules/.bin/tsc:*)",
       "Bash(node:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(~/.claude/vercel-plugin-telemetry-preference:*)",
+      "Bash(powershell.exe:*)",
+      "Bash(python:*)",
+      "Bash(npx vitest:*)",
+      "Bash(sed:*)",
+      "mcp__plugin_supabase_supabase__deploy_edge_function",
+      "WebFetch(domain:www.coursera.org)"
     ]
-  }
+  },
+  "companyAnnouncements": [
+    "Welcome to Makedir!!!",
+    "Reminder: Code reviews required for all PRs",
+    "New security policy in effect"
+  ],
+  "teammateMode": "tmux"
 }

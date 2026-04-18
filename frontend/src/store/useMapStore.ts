@@ -13,6 +13,7 @@ import { ZONE_COLORS as COLORS } from '../types';
 
 export type DrawingMode = 'zone' | 'zone-circle' | 'poi' | 'fence' | null;
 export type WizardStep = 'property' | 'zone0' | 'zones' | 'elements' | 'done';
+export type ActivePanel = 'map' | 'university';
 
 interface MapStore {
   // Estado
@@ -30,6 +31,7 @@ interface MapStore {
   userLocation: [number, number] | null;   // posição GPS do usuário
   isLoading: boolean;
   error: string | null;
+  activePanel: ActivePanel;
 
   // Propriedade
   setProperty: (property: Property) => void;
@@ -81,6 +83,7 @@ interface MapStore {
   // UI
   setLoading: (v: boolean) => void;
   setError: (msg: string | null) => void;
+  setActivePanel: (panel: ActivePanel) => void;
 }
 
 export const useMapStore = create<MapStore>((set, get) => ({
@@ -98,6 +101,7 @@ export const useMapStore = create<MapStore>((set, get) => ({
   userLocation: null,
   isLoading: false,
   error: null,
+  activePanel: 'map',
 
   setProperty: (property) => set({ property }),
   clearProperty: () => set({ property: null, zones: [], elements: [] }),
@@ -203,4 +207,5 @@ export const useMapStore = create<MapStore>((set, get) => ({
 
   setLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),
+  setActivePanel: (activePanel) => set({ activePanel }),
 }));

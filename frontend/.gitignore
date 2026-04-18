@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 
+/design
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -27,3 +29,4 @@ dist-ssr
 /.claude/
 .claude/settings.local.json
 .claude/history
+/.specify
