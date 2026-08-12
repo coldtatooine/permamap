@@ -4,7 +4,7 @@
 # ========================================
 # STAGE 1: Build Stage
 # ========================================
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
@@ -21,7 +21,7 @@ ENV NODE_ENV=development
 
 RUN apk add --no-cache libc6-compat git
 
-# Corepack do Node 20 alpine e antigo (Cannot find matching keyid)
+# Corepack bundled no Alpine costuma falhar (Cannot find matching keyid)
 RUN npm install -g corepack@latest \
     && corepack enable \
     && corepack prepare pnpm@11.20.0 --activate
