@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useUniversity } from '../../../hooks/useUniversity';
 import type { CuratedSource, CourseCategory, CreateSourceInput } from '../../../types/university';
-import { COURSE_CATEGORY_LABELS, COURSE_CATEGORY_COLORS } from '../../../types/university';
+import { COURSE_CATEGORY_LABELS } from '../../../types/university';
 import { SourceForm } from './SourceForm';
 
 type CategoryFilter = CourseCategory | 'all';
@@ -228,7 +228,6 @@ interface SourceRowProps {
 }
 
 function SourceRow({ source, onEdit, onArchive }: SourceRowProps) {
-  const categoryColor = COURSE_CATEGORY_COLORS[source.category];
   const isArchived = source.status === 'archived';
 
   return (
@@ -244,13 +243,13 @@ function SourceRow({ source, onEdit, onArchive }: SourceRowProps) {
         opacity: isArchived ? 0.6 : 1,
       }}
     >
-      {/* Category dot */}
+      {/* Category dot — marcador neutro; categoria diferenciada pelo label abaixo */}
       <div
         style={{
           width: '8px',
           height: '8px',
           borderRadius: '50%',
-          background: categoryColor,
+          background: 'var(--color-accent)',
           flexShrink: 0,
         }}
         title={COURSE_CATEGORY_LABELS[source.category]}

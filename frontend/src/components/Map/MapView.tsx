@@ -11,6 +11,7 @@ import { ZoneForm } from '../Forms/ZoneForm';
 import { POIForm } from '../Forms/POIForm';
 import { useMapStore } from '../../store/useMapStore';
 import { useGeolocation } from '../../hooks/useGeolocation';
+import { cssVar } from '../../lib/cssVar';
 import type { DrawingMode } from '../../store/useMapStore';
 import type { GeoJSONGeometry, GeoJSONPolygon } from '../../types';
 
@@ -136,14 +137,13 @@ export function MapView() {
             background: isLocating ? 'var(--pm-accent-muted)' : 'var(--pm-panel)',
             border: `1.5px solid ${isLocating ? 'var(--pm-accent)' : 'var(--pm-border-bright)'}`,
             color: isLocating ? 'var(--pm-accent)' : 'var(--pm-text-2)',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
-            backdropFilter: 'blur(8px)',
+            boxShadow: 'var(--shadow-whisper)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: '18px',
             cursor: isLocating ? 'wait' : 'pointer',
-            transition: 'all 0.2s ease',
+            transition: 'background-color var(--dur-short) var(--ease-out), border-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out)',
           }}
         >
           {isLocating
@@ -288,20 +288,20 @@ function DrawingController({
       if (geom) onCreated(geom);
     });
 
-    // Inicia desenho
+    // Inicia desenho — cores resolvem dos tokens em runtime (Leaflet não lê var())
     if (mode === 'zone') {
       drawRef.current = new L.Draw.Polygon(map as L.DrawMap, {
-        shapeOptions: { color: '#F7C35F', fillOpacity: 0.15 },
+        shapeOptions: { color: cssVar('--color-accent', '#1a8f3a'), fillOpacity: 0.15 },
       });
     } else if (mode === 'zone-circle') {
       drawRef.current = new L.Draw.Circle(map as L.DrawMap, {
-        shapeOptions: { color: '#F7C35F', fillOpacity: 0.15 },
+        shapeOptions: { color: cssVar('--color-accent', '#1a8f3a'), fillOpacity: 0.15 },
       });
     } else if (mode === 'poi') {
       drawRef.current = new L.Draw.Marker(map as L.DrawMap);
     } else if (mode === 'fence') {
       drawRef.current = new L.Draw.Polygon(map as L.DrawMap, {
-        shapeOptions: { color: '#92400e', fillOpacity: 0.08, dashArray: '6 4' },
+        shapeOptions: { color: cssVar('--color-fence', '#92400e'), fillOpacity: 0.08, dashArray: '6 4' },
       });
     }
 

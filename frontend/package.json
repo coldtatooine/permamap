@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "engines": {
-    "node": ">=22.13",
-    "pnpm": ">=11"
+    "node": ">=20",
+    "pnpm": ">=10"
   },
   "scripts": {
     "dev": "vite",

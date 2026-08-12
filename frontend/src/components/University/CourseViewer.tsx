@@ -4,7 +4,7 @@
 
 import DOMPurify from 'dompurify';
 import type { Course } from '../../types/university';
-import { COURSE_CATEGORY_LABELS, COURSE_CATEGORY_COLORS } from '../../types/university';
+import { COURSE_CATEGORY_LABELS } from '../../types/university';
 
 interface CourseViewerProps {
   course: Course;
@@ -24,39 +24,32 @@ export function CourseViewer({ course, onClose }: CourseViewerProps) {
     ALLOWED_ATTR,
   });
 
-  const categoryColor = COURSE_CATEGORY_COLORS[course.category];
   const categoryLabel = COURSE_CATEGORY_LABELS[course.category];
 
   return (
-    <div className="pm-overlay" onClick={onClose}>
-      <div
-        className="pm-modal pm-animate-in"
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          maxWidth: '780px',
-          width: '90vw',
-          maxHeight: '85vh',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        {/* Cabeçalho */}
+    <div className="pm-course-viewer pm-fade-in">
+      {/* Cabeçalho */}
+      <div className="pm-course-viewer-header">
         <div
           style={{
+            maxWidth: '65ch',
+            margin: '0 auto',
             display: 'flex',
             alignItems: 'flex-start',
             justifyContent: 'space-between',
-            marginBottom: '16px',
-            gap: '12px',
+            gap: 'var(--space-md)',
           }}
         >
-          <div style={{ flex: 1 }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <span
               style={{
                 display: 'inline-block',
-                background: categoryColor,
-                color: '#fff',
+                background: 'var(--color-accent-soft)',
+                color: 'var(--color-ink)',
                 fontSize: '11px',
+                fontWeight: 600,
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase',
                 padding: '2px 8px',
                 borderRadius: '4px',
                 marginBottom: '8px',
@@ -68,8 +61,9 @@ export function CourseViewer({ course, onClose }: CourseViewerProps) {
               style={{
                 color: 'var(--pm-text)',
                 fontFamily: 'var(--font-display)',
-                fontSize: '22px',
-                lineHeight: 1.3,
+                fontSize: 'var(--text-lg)',
+                lineHeight: 1.2,
+                letterSpacing: 'var(--tracking-display)',
                 margin: 0,
               }}
             >
@@ -79,25 +73,23 @@ export function CourseViewer({ course, onClose }: CourseViewerProps) {
           <button
             className="pm-btn pm-btn-ghost"
             onClick={onClose}
-            style={{ flexShrink: 0, padding: '4px 10px' }}
+            style={{ flexShrink: 0, width: 'auto', padding: 'var(--space-2xs) var(--space-sm)' }}
             aria-label="Fechar"
           >
             ✕
           </button>
         </div>
+      </div>
 
-        {/* Conteúdo gerado */}
-        <div
-          style={{
-            flex: 1,
-            overflow: 'auto',
-            color: 'var(--pm-text-2)',
-            lineHeight: 1.7,
-            fontSize: '15px',
-          }}
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: cleanHtml }}
-        />
+      {/* Conteúdo gerado — Long Document, measure 65ch */}
+      <div className="pm-course-viewer-body">
+        <div className="pm-course-viewer-content">
+          <div
+            className="pm-course-html"
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: cleanHtml }}
+          />
+        </div>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@
 
 import { motion } from 'framer-motion';
 import type { Course } from '../../types/university';
-import { COURSE_CATEGORY_LABELS, COURSE_CATEGORY_COLORS } from '../../types/university';
+import { COURSE_CATEGORY_LABELS } from '../../types/university';
 
 interface CourseCardProps {
   course: Course;
@@ -12,19 +12,18 @@ interface CourseCardProps {
 }
 
 export function CourseCard({ course, onClick }: CourseCardProps) {
-  const categoryColor = COURSE_CATEGORY_COLORS[course.category];
   const categoryLabel = COURSE_CATEGORY_LABELS[course.category];
   const description = course.description ?? '';
-  const truncated = description.length > 120 ? description.slice(0, 120) + '...' : description;
+  const truncated = description.length > 120 ? description.slice(0, 120) + '…' : description;
   const publishedDate = course.published_at
     ? new Date(course.published_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
     : '';
 
   return (
     <motion.div
-      whileHover={{ scale: 1.02, backgroundColor: 'var(--pm-card-hover)' }}
+      whileHover={{ backgroundColor: 'var(--pm-card-hover)' }}
       whileTap={{ scale: 0.99 }}
-      transition={{ duration: 0.15 }}
+      transition={{ duration: 0.12, ease: [0.16, 1, 0.3, 1] }}
       onClick={() => onClick(course)}
       style={{
         background: 'var(--pm-card)',
@@ -39,8 +38,8 @@ export function CourseCard({ course, onClick }: CourseCardProps) {
     >
       <span style={{
         display: 'inline-block',
-        background: categoryColor,
-        color: '#fff',
+        background: 'var(--color-accent-soft)',
+        color: 'var(--color-ink)',
         fontSize: '11px',
         fontWeight: 600,
         padding: '3px 10px',

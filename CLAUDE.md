@@ -10,6 +10,7 @@ baseado em Leaflet.js + Supabase.
 | Layer | Technology |
 |-------|-----------|
 | Language | TypeScript (strict mode) |
+| Package Manager | pnpm 11 (workspace) |
 | UI Framework | React 19 |
 | Build Tool | Vite + @tailwindcss/vite (TailwindCSS v4) |
 | State | Zustand |

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useMapStore } from '../../store/useMapStore';
 import { useProperty } from '../../hooks/useProperty';
-import { Input, Button, Modal, ModalFooter, Stepper, Alert } from '@permamap/ui';
+import { Input, Button, Modal, ModalFooter, Stepper, Alert, Icon } from '@permamap/ui';
 import type { StepperStep } from '@permamap/ui';
 import permamapLogo from '../../assets/permamap-logo-full.svg';
 
@@ -43,7 +43,6 @@ export function Wizard() {
       open={isWizardOpen}
       onClose={closeWizard}
       loading={isSaving}
-      zIndex={3000}
       closeOnOverlay={false}
       maxWidth="440px"
     >
@@ -82,8 +81,8 @@ export function Wizard() {
                 border: '1px solid var(--pm-accent)',
                 opacity: 0.85,
               }}>
-                <span style={{ fontSize: '1rem' }}>📍</span>
-                <span style={{ fontSize: '0.8rem', color: 'var(--pm-accent)', fontFamily: 'var(--font-mono)' }}>
+                <Icon name="map-pin" size={15} color="var(--color-accent-deep)" />
+                <span style={{ fontSize: '0.8rem', color: 'var(--color-accent-deep)', fontFamily: 'var(--font-mono)', fontVariantNumeric: 'tabular-nums' }}>
                   {pendingPropertyLocation[0].toFixed(5)}, {pendingPropertyLocation[1].toFixed(5)}
                 </span>
               </div>
@@ -139,8 +138,8 @@ export function Wizard() {
             gap: '12px',
             borderRadius: '12px',
             padding: '12px 16px',
-            background: 'rgba(255,77,77,0.09)',
-            border: '1px solid rgba(255,77,77,0.28)',
+            background: 'var(--color-danger-soft)',
+            border: '1px solid var(--color-rule)',
           }}>
             <div style={{
               width: '32px',
@@ -152,15 +151,15 @@ export function Wizard() {
               fontWeight: 700,
               fontSize: '0.875rem',
               flexShrink: 0,
-              background: 'rgba(255,77,77,0.16)',
-              border: '1.5px solid rgba(255,77,77,0.4)',
-              color: '#ff4d4d',
+              background: 'var(--color-danger-soft)',
+              border: '1.5px solid var(--color-rule-2)',
+              color: 'var(--color-danger-deep)',
               fontFamily: 'var(--font-mono)',
             }}>
               0
             </div>
             <div>
-              <p style={{ fontSize: '0.875rem', fontWeight: 600, color: '#ff4d4d' }}>Zona 0 – Casa</p>
+              <p style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-danger-deep)' }}>Zona 0 – Casa</p>
               <p style={{ fontSize: '0.75rem', marginTop: '2px', color: 'var(--pm-text-2)' }}>
                 Use <strong>Criar Zona</strong> no mapa e selecione o número 0.
               </p>

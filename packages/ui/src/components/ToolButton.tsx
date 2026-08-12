@@ -24,37 +24,36 @@ export function ToolButton({
   const base: React.CSSProperties = {
     display:        'flex',
     alignItems:     'center',
-    gap:            '6px',
-    padding:        '7px 13px',
+    gap:            'var(--space-xs)',
+    padding:        'var(--space-xs) var(--space-sm)',
     borderRadius:   '8px',
-    fontSize:       '0.72rem',
+    fontSize:       '0.8125rem',
     fontWeight:     600,
     fontFamily:     'var(--font-ui)',
     letterSpacing:  '0.04em',
     cursor:         disabled ? 'not-allowed' : 'pointer',
-    transition:     'all 0.15s ease',
+    transition:     'background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out), opacity var(--dur-micro) var(--ease-out)',
     border:         '1px solid transparent',
     whiteSpace:     'nowrap',
-    opacity:        disabled ? 0.45 : 1,
+    opacity:        disabled ? 0.55 : 1,
   };
 
   const activeStyle: React.CSSProperties = {
-    background: 'var(--pm-accent)',
-    color:      '#1A1A1A',
-    border:     '1px solid var(--pm-accent)',
+    background: 'var(--color-accent)',
+    color:      'var(--color-accent-ink)',
+    border:     '1px solid var(--color-accent)',
   };
 
   const defaultStyle: React.CSSProperties = {
-    background: 'rgba(38,60,40,0.94)',
+    background: 'var(--color-paper-2)',
     color:      'var(--pm-text)',
-    border:     '1px solid var(--pm-border-bright)',
-    backdropFilter: 'blur(8px)',
+    border:     '1px solid var(--color-rule)',
   };
 
   const disabledStyle: React.CSSProperties = {
-    background: 'rgba(38,60,40,0.6)',
-    color:      'var(--pm-text-3)',
-    border:     '1px solid var(--pm-border)',
+    background: 'var(--color-paper-2)',
+    color:      'var(--color-muted)',
+    border:     '1px solid var(--color-rule)',
   };
 
   const computed = disabled ? disabledStyle : active ? activeStyle : defaultStyle;

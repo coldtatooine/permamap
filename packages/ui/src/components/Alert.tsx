@@ -14,10 +14,10 @@ export interface AlertProps {
 }
 
 const styles: Record<AlertVariant, { bg: string; border: string; color: string; defaultIcon: string }> = {
-  warn:    { bg: 'var(--pm-warn-muted)',   border: 'rgba(245,197,24,0.25)',  color: 'var(--pm-warn)',   defaultIcon: '⚠' },
-  danger:  { bg: 'var(--pm-danger-muted)', border: 'rgba(255,107,107,0.25)', color: 'var(--pm-danger)', defaultIcon: '✕' },
-  info:    { bg: 'var(--pm-accent-muted)', border: 'rgba(247,195,95,0.22)',  color: 'var(--pm-accent)', defaultIcon: 'ℹ' },
-  success: { bg: 'var(--pm-accent-muted)', border: 'rgba(247,195,95,0.22)',  color: 'var(--pm-accent)', defaultIcon: '✓' },
+  warn:    { bg: 'var(--pm-warn-muted)',   border: 'color-mix(in oklch, var(--color-warn-deep) 30%, transparent)',   color: 'var(--color-warn-deep)',   defaultIcon: '⚠' },
+  danger:  { bg: 'var(--pm-danger-muted)', border: 'color-mix(in oklch, var(--color-danger-deep) 30%, transparent)', color: 'var(--color-danger-deep)', defaultIcon: '✕' },
+  info:    { bg: 'var(--pm-accent-muted)', border: 'color-mix(in oklch, var(--color-accent-deep) 30%, transparent)', color: 'var(--color-accent-deep)', defaultIcon: 'ℹ' },
+  success: { bg: 'var(--pm-accent-muted)', border: 'color-mix(in oklch, var(--color-accent-deep) 30%, transparent)', color: 'var(--color-accent-deep)', defaultIcon: '✓' },
 };
 
 export function Alert({ variant = 'info', icon, children, className = '' }: AlertProps) {
@@ -30,9 +30,9 @@ export function Alert({ variant = 'info', icon, children, className = '' }: Aler
         display:       'flex',
         alignItems:    'flex-start',
         gap:           '8px',
-        borderRadius:  '8px',
+        borderRadius:  'var(--radius-input)',
         padding:       '8px 12px',
-        fontSize:      '0.75rem',
+        fontSize:      'var(--text-xs)',
         lineHeight:    '1.5',
         background:    s.bg,
         border:        `1px solid ${s.border}`,

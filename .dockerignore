@@ -2,6 +2,7 @@
 node_modules/
 frontend/node_modules/
 packages/*/node_modules/
+.pnpm-store/
 
 # Build outputs
 frontend/dist/

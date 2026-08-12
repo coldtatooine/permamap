@@ -48,7 +48,7 @@ export function DrawingToolbar({ onActivate }: Props) {
     }
   }
 
-  const zoneIconColor = zoneIsActive ? '#1A1A1A'
+  const zoneIconColor = zoneIsActive ? 'var(--color-accent-ink)'
     : zoneDisabled ? 'var(--pm-text-3)'
     : 'var(--pm-text)';
 
@@ -72,7 +72,7 @@ export function DrawingToolbar({ onActivate }: Props) {
             onClick={handleZoneClick}
             title={!canAddZone ? 'Máximo de 5 zonas atingido' : 'Criar Zona'}
           >
-            <Icon name="hexagon" size={15} color={zoneIsActive ? '#1A1A1A' : zoneIconColor} />
+            <Icon name="hexagon" size={15} color={zoneIconColor} />
             <span className="pm-tool-label">Criar Zona</span>
           </ToolButton>
 
@@ -82,14 +82,14 @@ export function DrawingToolbar({ onActivate }: Props) {
                 className="pm-zone-type-option"
                 onClick={() => onActivate('zone')}
               >
-                <span className="pm-zone-type-emoji">🔷</span>
+                <Icon name="hexagon" size={14} color="currentColor" />
                 Polígono
               </button>
               <button
                 className="pm-zone-type-option"
                 onClick={() => onActivate('zone-circle')}
               >
-                <span className="pm-zone-type-emoji">⭕</span>
+                <Icon name="circle" size={14} color="currentColor" />
                 Círculo
               </button>
             </div>
@@ -100,7 +100,7 @@ export function DrawingToolbar({ onActivate }: Props) {
         {OTHER_TOOLS.map(({ mode, label, icon }) => {
           const disabled  = !property;
           const active    = drawingMode === mode;
-          const iconColor = active ? '#1A1A1A' : disabled ? 'var(--pm-text-3)' : 'var(--pm-text)';
+          const iconColor = active ? 'var(--color-accent-ink)' : disabled ? 'var(--pm-text-3)' : 'var(--pm-text)';
 
           return (
             <ToolButton

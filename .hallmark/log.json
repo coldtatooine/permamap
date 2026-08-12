@@ -1,0 +1,22 @@
+[
+  {
+    "date": "2026-08-12",
+    "macrostructure": "Workbench",
+    "theme": "custom",
+    "theme_axes": "light / roman-serif / chromatic-green ~145°",
+    "vibe": "green light, fresh, nature-mimetizing, textured, strong typo",
+    "enrichment": "none",
+    "brief": "audit fix C1–C9 + majors",
+    "scope": "app"
+  },
+  {
+    "date": "2026-08-12",
+    "macrostructure": "Workbench",
+    "theme": "custom",
+    "theme_axes": "light / roman-serif / chromatic-green ~145°",
+    "vibe": "green light, fresh, nature-mimetizing, textured, strong typo",
+    "enrichment": "none",
+    "brief": "Permamap — redesign app inteiro (design.md + Auth primeiro)",
+    "scope": "app"
+  }
+]

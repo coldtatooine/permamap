@@ -3,9 +3,9 @@
 // =====================
 
 export const fontFamily = {
-  display: "'Lora', Georgia, serif",          // Headings, títulos de zona
-  ui:      "'Syne', sans-serif",              // Labels, botões, texto geral
-  mono:    "'Syne Mono', monospace",          // Números, dados, métricas
+  display: "'Fraunces', ui-serif, Georgia, serif",        // Headings, títulos (roman apenas)
+  ui:      "'Manrope', ui-sans-serif, system-ui, sans-serif", // Labels, botões, texto geral
+  mono:    "'Syne Mono', ui-monospace, monospace",        // Coordenadas, dados tabulares
 } as const;
 
 export const fontSize = {

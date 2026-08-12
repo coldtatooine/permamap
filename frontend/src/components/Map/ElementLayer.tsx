@@ -1,6 +1,7 @@
 import { Marker, Polygon, Tooltip } from 'react-leaflet';
 import L from 'leaflet';
 import { useMapStore } from '../../store/useMapStore';
+import { cssVar } from '../../lib/cssVar';
 import { POI_TYPE_DEFINITIONS } from '../../types';
 import type { Element, GeoJSONPoint, GeoJSONPolygon } from '../../types';
 
@@ -88,10 +89,10 @@ function FencePolyline({ element }: { element: Element }) {
 
   const color =
     element.metadata_json.fence_type === 'elétrica'
-      ? '#facc15'
+      ? cssVar('--color-fence-eletrica', '#facc15')
       : element.metadata_json.fence_type === 'viva'
-      ? '#4ade80'
-      : '#92400e';
+      ? cssVar('--color-fence-viva', '#4ade80')
+      : cssVar('--color-fence', '#92400e');
 
   return (
     <Polygon

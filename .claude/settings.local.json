@@ -6,17 +6,18 @@
   },
   "permissions": {
     "allow": [
-      "Bash(npx supabase --version)",
-      "Bash(npx supabase:*)",
-      "Bash(npm install:*)",
-      "Bash(npx tsc:*)",
+      "Bash(pnpm exec supabase --version)",
+      "Bash(pnpm exec supabase:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm:*)",
+      "Bash(pnpm exec tsc:*)",
       "Bash(node_modules/.bin/tsc:*)",
       "Bash(node:*)",
       "Bash(grep:*)",
       "Bash(~/.claude/vercel-plugin-telemetry-preference:*)",
       "Bash(powershell.exe:*)",
       "Bash(python:*)",
-      "Bash(npx vitest:*)",
+      "Bash(pnpm exec vitest:*)",
       "Bash(sed:*)",
       "mcp__plugin_supabase_supabase__deploy_edge_function",
       "WebFetch(domain:www.coursera.org)"

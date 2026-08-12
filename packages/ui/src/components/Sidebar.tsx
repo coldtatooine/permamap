@@ -96,9 +96,9 @@ export function SidebarTabs({ tabs, active, onChange, className }: SidebarTabsPr
             borderBottom:   active === tab.key
               ? '2px solid var(--pm-accent)'
               : '2px solid transparent',
-            color:          active === tab.key ? 'var(--pm-accent)' : 'var(--pm-text-3)',
+            color:          active === tab.key ? 'var(--color-accent-deep)' : 'var(--pm-text-3)',
             cursor:         'pointer',
-            transition:     'color 0.18s ease',
+            transition:     'color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out)',
           }}
         >
           {tab.label}
@@ -176,7 +176,7 @@ export function SidebarToggle({ open, offset, onClick, title, side = 'left' }: S
         position:       'absolute',
         top:            '50%',
         transform:      'translateY(-50%)',
-        zIndex:         1500,
+        zIndex:         'var(--z-sheet)',
         width:          '14px',
         height:         '44px',
         background:     'var(--pm-panel)',

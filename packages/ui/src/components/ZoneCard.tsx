@@ -45,10 +45,8 @@ export function ZoneCard({
     <div
       className={`pm-zone-card pm-animate-in${active ? ' active' : ''}`}
       style={{
-        borderLeft:      `3px solid ${zoneColor}`,
         animationDelay:  `${index * 45}ms`,
-        padding:         '13px 16px',
-        boxShadow:       active ? `0 0 28px -12px ${zoneColor}60` : 'none',
+        padding:         'var(--space-sm) var(--space-md)',
       }}
       onClick={onClick}
       role="button"
@@ -56,23 +54,34 @@ export function ZoneCard({
       aria-pressed={active}
       onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
     >
-      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '14px' }}>
-        {/* Número em destaque (antigo ghost number) */}
-        <span
-          aria-hidden
-          style={{
-            fontFamily:    'var(--font-display)',
-            fontSize:      '2.75rem',
-            fontWeight:    800,
-            lineHeight:    1,
-            pointerEvents: 'none',
-            userSelect:    'none',
-            color:         zoneColor,
-            opacity:       0.8,
-            textShadow:    `0 2px 10px ${zoneColor}40`,
-          }}
-        >
-          {zoneNumber}
+      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
+        {/* Numeral em ink + swatch quadrado com a cor funcional da zona */}
+        <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-xs)', flexShrink: 0 }}>
+          <span
+            aria-hidden
+            style={{
+              fontFamily:    'var(--font-display)',
+              fontSize:      '2.75rem',
+              fontWeight:    800,
+              lineHeight:    1,
+              pointerEvents: 'none',
+              userSelect:    'none',
+              color:         'var(--color-ink)',
+              opacity:       0.8,
+            }}
+          >
+            {zoneNumber}
+          </span>
+          <span
+            aria-hidden
+            style={{
+              width:        '8px',
+              height:       '8px',
+              borderRadius: '2px',
+              background:   zoneColor,
+              flexShrink:   0,
+            }}
+          />
         </span>
 
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -90,17 +99,17 @@ export function ZoneCard({
           </p>
           <p style={{
             color:       'var(--pm-text-3)',
-            fontSize:    '0.68rem',
+            fontSize:    '0.8125rem',
             fontFamily:  'var(--font-ui)',
             marginTop:   '3px',
             letterSpacing: '0.01em',
-            lineHeight:  1,
+            lineHeight:  1.2,
           }}>
             {meta}
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '4px' }}>
+        <div style={{ display: 'flex', gap: 'var(--space-2xs)' }}>
           {onEdit && (
             <button
               className="pm-edit-btn"
@@ -116,9 +125,9 @@ export function ZoneCard({
                 display:     'flex',
                 alignItems:  'center',
                 flexShrink:  0,
-                transition:  'color 0.15s ease',
+                transition:  'color var(--dur-micro) var(--ease-out)',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--pm-primary)')}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-accent-deep)')}
               onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--pm-text-3)')}
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
@@ -144,7 +153,7 @@ export function ZoneCard({
                 display:     'flex',
                 alignItems:  'center',
                 flexShrink:  0,
-                transition:  'color 0.15s ease',
+                transition:  'color var(--dur-micro) var(--ease-out)',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--pm-danger)')}
               onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--pm-text-3)')}

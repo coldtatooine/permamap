@@ -5,7 +5,7 @@
 import { useEffect, useState } from 'react';
 import { useUniversity } from '../../../hooks/useUniversity';
 import type { Course, CourseStatus } from '../../../types/university';
-import { COURSE_CATEGORY_LABELS, COURSE_CATEGORY_COLORS } from '../../../types/university';
+import { COURSE_CATEGORY_LABELS } from '../../../types/university';
 import { CourseViewer } from '../CourseViewer';
 
 const STATUS_LABELS: Record<CourseStatus, string> = {
@@ -16,10 +16,10 @@ const STATUS_LABELS: Record<CourseStatus, string> = {
 };
 
 const STATUS_COLORS: Record<CourseStatus, string> = {
-  draft:     '#6b7280',
-  published: '#22c55e',
-  archived:  '#d97706',
-  failed:    '#ef4444',
+  draft:     'var(--color-muted)',
+  published: 'var(--color-accent-deep)',
+  archived:  'var(--color-warn-deep)',
+  failed:    'var(--color-danger)',
 };
 
 export function CourseAdminList() {
@@ -138,8 +138,8 @@ export function CourseAdminList() {
               >
                 <span
                   style={{
-                    background: COURSE_CATEGORY_COLORS[course.category],
-                    color: '#fff',
+                    background: 'var(--color-accent-soft)',
+                    color: 'var(--color-ink)',
                     fontSize: '10px',
                     padding: '2px 7px',
                     borderRadius: '4px',
@@ -149,12 +149,12 @@ export function CourseAdminList() {
                 </span>
                 <span
                   style={{
-                    background: STATUS_COLORS[course.status] + '33',
+                    background: `color-mix(in oklch, ${STATUS_COLORS[course.status]} 12%, transparent)`,
                     color: STATUS_COLORS[course.status],
                     fontSize: '11px',
                     padding: '2px 8px',
                     borderRadius: '4px',
-                    border: `1px solid ${STATUS_COLORS[course.status]}55`,
+                    border: `1px solid color-mix(in oklch, ${STATUS_COLORS[course.status]} 35%, transparent)`,
                   }}
                 >
                   {STATUS_LABELS[course.status]}

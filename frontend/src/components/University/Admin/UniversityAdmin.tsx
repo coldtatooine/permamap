@@ -39,7 +39,8 @@ export function UniversityAdmin() {
           style={{
             color: 'var(--pm-text)',
             fontFamily: 'var(--font-display)',
-            fontSize: '20px',
+            fontSize: 'var(--text-md)',
+            letterSpacing: 'var(--tracking-display)',
             margin: '0 0 16px',
           }}
         >
@@ -57,7 +58,7 @@ export function UniversityAdmin() {
                   activeTab === tab
                     ? '2px solid var(--pm-accent)'
                     : '2px solid transparent',
-                color: activeTab === tab ? 'var(--pm-accent)' : 'var(--pm-text-2)',
+                color: activeTab === tab ? 'var(--color-accent-deep)' : 'var(--pm-text-2)',
                 padding: '8px 16px',
               }}
             >
@@ -93,9 +94,9 @@ export function UniversityAdmin() {
                       activeCourseSubTab === sub
                         ? '2px solid var(--pm-accent)'
                         : '2px solid transparent',
-                    color: activeCourseSubTab === sub ? 'var(--pm-accent)' : 'var(--pm-text-2)',
+                    color: activeCourseSubTab === sub ? 'var(--color-accent-deep)' : 'var(--pm-text-2)',
                     padding: '6px 14px',
-                    fontSize: '13px',
+                    fontSize: 'var(--text-sm)',
                   }}
                 >
                   {COURSE_SUB_TAB_LABELS[sub]}

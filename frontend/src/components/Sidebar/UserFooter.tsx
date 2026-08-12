@@ -23,10 +23,10 @@ export function UserFooter() {
       style={{
         flexShrink:  0,
         borderTop:   '1px solid var(--pm-border)',
-        padding:     '12px 14px',
+        padding:     'var(--space-sm) var(--space-md)',
         display:     'flex',
         alignItems:  'center',
-        gap:         '10px',
+        gap:         'var(--space-sm)',
         background:  'var(--pm-panel)',
       }}
     >
@@ -37,7 +37,7 @@ export function UserFooter() {
           height:         '32px',
           borderRadius:   '50%',
           background:     'var(--pm-accent-muted)',
-          border:         '1.5px solid rgba(247,195,95,0.30)',
+          border:         '1.5px solid var(--color-accent)',
           display:        'flex',
           alignItems:     'center',
           justifyContent: 'center',
@@ -45,7 +45,7 @@ export function UserFooter() {
           fontFamily:     'var(--font-ui)',
           fontWeight:     700,
           fontSize:       '0.8rem',
-          color:          'var(--pm-accent)',
+          color:          'var(--color-accent-deep)',
           letterSpacing:  '0.02em',
           userSelect:     'none',
         }}

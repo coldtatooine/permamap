@@ -7,37 +7,123 @@
 /* =====================
    Design Tokens
    ===================== */
+/* Hallmark · genre: editorial · macrostructure: Workbench (app) · design-system: design.md · designed-as-app
+ * theme: custom · vibe: "green light, fresh, nature-mimetizing, textured, strong typo"
+ * paper: oklch(96.5% 0.015 130) · accent: oklch(56% 0.15 145)
+ * display: Fraunces · body: Manrope · outlier: Syne Mono · axes: light / roman-serif / chromatic-green ~145°
+ * pre-emit critique: P4 H4 E4 S4 R5 V4
+ * contrast: pass (40–41) · honest: pass (46) · chrome: pass (47) · tokens: pass (48)
+ * responsive: pass (49) · mobile: pass (34, 49–57) · studied: no
+ * audit fix 2026-08-12: C1–C9 + M1–M13 — ink-on-ink, paleta noturna removida, neon red → danger tokens,
+ * CourseViewer full-panel 65ch, category chips, hairlines + swatches, undo delete, motion tokenizado,
+ * 8 estados nos controles, --ds-* fora das telas de app
+ */
 :root {
   /* =====================
-     App tokens — remapeados para o DS "Agricultural Modern"
+     Canonical tokens — fonte de verdade: design.md
      ===================== */
+  --color-paper:       oklch(96.5% 0.015 130);
+  --color-paper-2:     oklch(93.5% 0.020 130);
+  --color-paper-3:     oklch(90% 0.022 128);
+  --color-ink:         oklch(21% 0.012 140);
+  --color-ink-2:       oklch(38% 0.012 140);
+  --color-muted:       oklch(52% 0.012 135);
+  --color-rule:        oklch(80% 0.016 132);
+  --color-rule-2:      oklch(72% 0.016 134);
+  --color-accent:      oklch(56% 0.15 145);
+  --color-accent-deep: oklch(42% 0.13 145);   /* texto/link em accent sobre papel */
+  --color-accent-ink:  oklch(21% 0.012 140);
+  --color-accent-soft: oklch(91% 0.045 140);
+  --color-focus:       oklch(52% 0.19 145);
+  --color-danger:      oklch(55% 0.19 25);
+  --color-danger-deep: oklch(45% 0.16 25);   /* texto danger sobre danger-soft */
+  --color-danger-soft: oklch(93% 0.03 25);
+  --color-warn:        oklch(72% 0.14 85);
+  --color-warn-deep:   oklch(48% 0.12 80);   /* texto warn sobre warn-soft */
+  --color-warn-soft:   oklch(93% 0.04 95);
+  --color-accent-on-dark: oklch(78% 0.16 145); /* accent sobre superfície escura (brand panel) */
+  --color-brand-panel:   oklch(35% 0.06 142);  /* painel de marca (auth) — superfície escura */
+  --color-brand-panel-2: oklch(28% 0.05 142);
+  --color-paper-80:      oklch(96.5% 0.015 130 / 0.8); /* texto paper sobre superfície escura */
 
-  /* Backgrounds */
-  --pm-void:        #1A1A1A;          /* ds-black — fundo de página */
-  --pm-panel:       #263C28;          /* ds-green-secondary — sidebar, modals */
-  --pm-card:        #2d4a2f;          /* entre secondary e primary — superfícies de card */
-  --pm-card-hover:  #344C31;          /* ds-green-primary — hover */
-  --pm-card-active: #3a5436;          /* um pouco mais claro — active */
+  --tracking-display: -0.02em;
+  --tracking-label:   0.10em;
 
-  /* Borders */
-  --pm-border:        rgba(255, 255, 255, 0.10);
-  --pm-border-bright: rgba(255, 255, 255, 0.20);
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-md:   1.25rem;
+  --text-lg:   1.5625rem;
+  --text-xl:   1.9531rem;
+  --text-2xl:  2.4414rem;
+  --text-3xl:  3.0518rem;
+  --text-display:   clamp(2.75rem, 5vw + 1rem, 5.25rem);
+  --text-display-s: clamp(2rem, 3.5vw + 1rem, 3.5rem);
 
-  /* Text */
-  --pm-text:   #FFFFFF;               /* ds-white */
-  --pm-text-2: rgba(255, 255, 255, 0.72);
-  --pm-text-3: rgba(255, 255, 255, 0.38);
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs:  0.5rem;
+  --space-sm:  0.75rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
 
-  /* Actions — accent agora é dourado */
-  --pm-accent:        #F7C35F;        /* ds-golden */
-  --pm-accent-hover:  #e8b44e;
-  --pm-accent-muted:  rgba(247, 195, 95, 0.16);
-  --pm-danger:        #ff6b6b;
-  --pm-danger-muted:  rgba(255, 107, 107, 0.14);
-  --pm-warn:          #f5c518;
-  --pm-warn-muted:    rgba(245, 197, 24, 0.14);
+  --rule-hair: 1px;
+  --radius-card:  10px;
+  --radius-input: 8px;
+  --radius-pill:  999px;
 
-  /* Zone colors */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:     cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long:  420ms;
+
+  --shadow-whisper: 0 1px 2px oklch(21% 0.012 140 / 0.06);
+  --shadow-modal:   0 24px 64px oklch(21% 0.012 140 / 0.16);
+
+  /* Z-scale nomeada (Leaflet ocupa até ~1000 internamente) */
+  --z-base:     1;
+  --z-raised:   10;
+  --z-sticky:   200;
+  --z-course:   500;
+  --z-toolbar:  1000;
+  --z-dropdown: 1100;
+  --z-backdrop: 1400;
+  --z-sheet:    1500;
+  --z-nav:      1600;
+  --z-modal:    2000;
+  --z-chrome:   9998;
+
+  /* =====================
+     App tokens (--pm-*) — aliases dos canônicos
+     ===================== */
+  --pm-void:        var(--color-paper);
+  --pm-panel:       var(--color-paper-2);
+  --pm-card:        var(--color-paper-3);
+  --pm-card-hover:  oklch(87.5% 0.024 128);
+  --pm-card-active: var(--color-accent-soft);
+
+  --pm-border:        var(--color-rule);
+  --pm-border-bright: var(--color-rule-2);
+
+  --pm-text:   var(--color-ink);
+  --pm-text-2: var(--color-ink-2);
+  --pm-text-3: var(--color-muted);
+
+  --pm-accent:        var(--color-accent);
+  --pm-accent-hover:  oklch(51% 0.15 145);
+  --pm-accent-muted:  var(--color-accent-soft);
+  --pm-danger:        var(--color-danger);
+  --pm-danger-muted:  var(--color-danger-soft);
+  --pm-warn:          var(--color-warn);
+  --pm-warn-muted:    var(--color-warn-soft);
+  --pm-focus-ring:    oklch(52% 0.19 145 / 0.28);
+
+  /* Zone colors — funcionais, renderizam sobre tiles do mapa (não re-tintar) */
   --z0: #ff4d4d;
   --z1: #ff8c1a;
   --z2: #f5c518;
@@ -45,56 +131,59 @@
   --z4: #1fa050;
   --z5: #4da6ff;
 
-  /* Fonts — Livvic como UI principal (DS heading font) */
-  --font-display: 'Lora', Georgia, serif;
-  --font-ui:      'Livvic', 'Syne', sans-serif;
-  --font-mono:    'Syne Mono', monospace;
+  /* Cercas — data-viz funcional sobre tiles (categoria do elemento) */
+  --color-fence:          #92400e;
+  --color-fence-eletrica: #facc15;
+  --color-fence-viva:     #4ade80;
+
+  /* Fonts — Fraunces display · Manrope UI · Syne Mono outlier (2+1) */
+  --font-display: 'Fraunces', ui-serif, Georgia, serif;
+  --font-ui:      'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    'Syne Mono', ui-monospace, monospace;
 
   /* =====================
-     Brand Design System (--ds-*)
-     Agricultural Modern — Permamap marketing/brand
+     Brand Design System (--ds-*) — remapeado p/ design.md
+     (nomes preservados p/ compat com packages/ui)
      ===================== */
+  --ds-golden:           var(--color-accent);
+  --ds-green-primary:    oklch(35% 0.06 142);   /* superfície escura de marketing */
+  --ds-green-secondary:  oklch(28% 0.05 142);
+  --ds-black:            var(--color-ink);
+  --ds-black-deep:       oklch(16% 0.01 140);
+  --ds-white:            var(--color-paper);
 
-  /* Cores */
-  --ds-golden:           #F7C35F;
-  --ds-green-primary:    #344C31;
-  --ds-green-secondary:  #263C28;
-  --ds-black:            #1A1A1A;
-  --ds-black-deep:       #0F0F0F;
-  --ds-white:            #FFFFFF;
+  /* Opacidades (overlays sobre imagem — alpha é modificador, não cor) */
+  --ds-white-80:  oklch(96.5% 0.015 130 / 0.8);
+  --ds-white-50:  oklch(96.5% 0.015 130 / 0.5);
+  --ds-white-20:  oklch(96.5% 0.015 130 / 0.2);
+  --ds-black-80:  oklch(21% 0.012 140 / 0.8);
+  --ds-black-40:  oklch(21% 0.012 140 / 0.4);
+  --ds-black-30:  oklch(21% 0.012 140 / 0.3);
 
-  /* Opacidades */
-  --ds-white-80:  rgba(255, 255, 255, 0.8);
-  --ds-white-50:  rgba(255, 255, 255, 0.5);
-  --ds-white-20:  rgba(255, 255, 255, 0.2);
-  --ds-black-80:  rgba(0, 0, 0, 0.8);
-  --ds-black-40:  rgba(0, 0, 0, 0.4);
-  --ds-black-30:  rgba(0, 0, 0, 0.3);
-
-  /* Gradientes */
-  --ds-gradient-overlay: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.4), transparent);
-  --ds-gradient-hero:    linear-gradient(to right, #344c31, #263c28);
+  /* Gradientes — dois stops apenas */
+  --ds-gradient-overlay: linear-gradient(to top, oklch(21% 0.012 140 / 0.8), oklch(21% 0.012 140 / 0.4), transparent);
+  --ds-gradient-hero:    linear-gradient(to right, oklch(35% 0.06 142), oklch(28% 0.05 142));
 
   /* Tipografia */
-  --ds-font-heading: 'Livvic', sans-serif;
-  --ds-font-body:    'Century Gothic', 'AppleGothic', sans-serif;
-  --ds-font-display: 'Johnstown Demo', serif;
+  --ds-font-heading: var(--font-display);
+  --ds-font-body:    var(--font-ui);
+  --ds-font-display: var(--font-display);
 
   /* Espaçamento */
   --ds-section-pad: 240px;
 
   /* Border Radius */
   --ds-radius-sm:  5px;
-  --ds-radius-md:  10px;
+  --ds-radius-md:  var(--radius-card);
   --ds-radius-lg:  15px;
   --ds-radius-xl:  20px;
   --ds-radius-2xl: 50px;
   --ds-radius-full: 50%;
 
   /* Sombras */
-  --ds-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --ds-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
-  --ds-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+  --ds-shadow-sm: var(--shadow-whisper);
+  --ds-shadow-md: 0 4px 8px oklch(21% 0.012 140 / 0.10);
+  --ds-shadow-lg: 0 8px 16px oklch(21% 0.012 140 / 0.14);
 }
 
 * {
@@ -106,7 +195,9 @@
 html, body, #root {
   height: 100%;
   width: 100%;
-  overflow: hidden;
+  /* App canvas travado na viewport; `clip` não cria scroll container
+     (preserva sticky/fixed internos) — gate 34 */
+  overflow: clip;
 }
 
 body {
@@ -117,16 +208,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Grain texture overlay */
+/* Grain texture overlay — papel, não verniz (design.md § Texture) */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 9998;
+  z-index: var(--z-chrome);
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.028;
-  mix-blend-mode: overlay;
+  opacity: 0.045;
+  mix-blend-mode: multiply;
 }
 
 /* Custom scrollbar */
@@ -159,21 +250,55 @@ body::after {
   to   { opacity: 1; }
 }
 
+/* Spinner funcional — autossuficiente p/ reduced-motion (não depende do utilitário Tailwind) */
+@keyframes pm-spin {
+  to { transform: rotate(360deg); }
+}
+
 @keyframes pm-wizard-in {
   from { opacity: 0; transform: translateY(18px) scale(0.97); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .pm-animate-in {
-  animation: pm-slide-up 0.22s ease-out both;
+  animation: pm-slide-up var(--dur-short) var(--ease-out) both;
 }
 
 .pm-wizard-in {
-  animation: pm-wizard-in 0.32s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+  animation: pm-wizard-in var(--dur-long) var(--ease-out) both;
 }
 
 .pm-fade-in {
-  animation: pm-fade-in 0.2s ease both;
+  animation: pm-fade-in var(--dur-short) var(--ease-out) both;
+}
+
+/* Foco visível — instantâneo, nunca animado (design.md § Microinteractions) */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Reduced motion — crossfade de opacity; loaders funcionais só desaceleram */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 150ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 150ms !important;
+  }
+  .pm-top-progress::after,
+  .pm-modal-progress::after {
+    animation: pm-progress-slide 2.6s var(--ease-in-out) infinite !important;
+  }
+  .pm-skeleton {
+    animation: pm-skeleton-pulse 2.4s var(--ease-in-out) infinite !important;
+  }
+  .user-loc-ring-pulse {
+    animation: geo-pulse 3.2s var(--ease-out) infinite !important;
+  }
+  /* Spinner de loading é funcional — continua rodando, só desacelera */
+  .animate-spin {
+    animation: pm-spin 1.6s linear infinite !important;
+  }
 }
 
 /* =====================
@@ -185,8 +310,8 @@ body::after {
   left: 0;
   width: 100%;
   height: 2px;
-  background: rgba(57, 255, 20, 0.1);
-  z-index: 9999;
+  background: var(--color-accent-soft);
+  z-index: var(--z-chrome);
   overflow: hidden;
   pointer-events: none;
 }
@@ -196,9 +321,8 @@ body::after {
   position: absolute;
   top: 0;
   bottom: 0;
-  background: #39ff14;
-  box-shadow: 0 0 8px #39ff14, 0 0 14px #39ff14;
-  animation: pm-progress-slide 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  background: var(--color-accent);
+  animation: pm-progress-slide 1.8s var(--ease-in-out) infinite;
 }
 
 /* =====================
@@ -208,8 +332,9 @@ body::after {
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  transition: background 0.18s ease, box-shadow 0.18s ease;
-  border-bottom: 1px solid var(--pm-border);
+  transition: background var(--dur-short) var(--ease-out), border-color var(--dur-short) var(--ease-out);
+  border: var(--rule-hair) solid var(--color-rule);
+  border-radius: var(--radius-input);
 }
 
 .pm-zone-card:hover {
@@ -221,18 +346,28 @@ body::after {
 }
 
 .pm-zone-card:hover .pm-delete-btn,
-.pm-zone-card:hover .pm-edit-btn {
+.pm-zone-card:hover .pm-edit-btn,
+.pm-zone-card:focus-within .pm-delete-btn,
+.pm-zone-card:focus-within .pm-edit-btn {
   opacity: 1;
 }
 
 .pm-delete-btn,
 .pm-edit-btn {
   opacity: 0;
-  transition: opacity 0.15s ease, color 0.15s ease;
+  transition: opacity var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+}
+
+/* Touch: sem hover — ações sempre visíveis */
+@media (pointer: coarse) {
+  .pm-delete-btn,
+  .pm-edit-btn {
+    opacity: 1;
+  }
 }
 
 /* =====================
-   Form Controls (dark)
+   Form Controls
    ===================== */
 .pm-input,
 .pm-select,
@@ -240,30 +375,46 @@ body::after {
   width: 100%;
   background: var(--pm-card);
   border: 1px solid var(--pm-border-bright);
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-size: 0.875rem;
+  border-radius: var(--radius-input);
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-sm);
   font-family: var(--font-ui);
   color: var(--pm-text);
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: 2px solid transparent;
+  outline-offset: 1px;
+  transition: border-color var(--dur-short) var(--ease-out),
+              background-color var(--dur-short) var(--ease-out);
 }
 
 .pm-input::placeholder,
-.pm-textarea::placeholder { color: var(--pm-text-3); }
+.pm-textarea::placeholder { color: var(--color-muted); }
 
+.pm-input:hover:not(:disabled):not(:focus),
+.pm-select:hover:not(:disabled):not(:focus),
+.pm-textarea:hover:not(:disabled):not(:focus) {
+  border-color: var(--color-muted);
+}
+
+.pm-input:disabled,
+.pm-select:disabled,
+.pm-textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Anel via outline — aparece instantaneamente (gate 15/39), sem transição */
 .pm-input:focus,
 .pm-select:focus,
 .pm-textarea:focus {
-  border-color: var(--pm-accent);
-  box-shadow: 0 0 0 3px var(--pm-accent-muted);
+  border-color: var(--color-accent);
+  outline-color: var(--color-focus);
 }
 
 .pm-select {
   appearance: none;
   cursor: pointer;
   padding-right: 38px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M5 6L0 0h10z' fill='%23F7C35F'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M5 6L0 0h10z' fill='%231a8f3a'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
 }
@@ -278,14 +429,14 @@ body::after {
 .pm-btn {
   display: block;
   width: 100%;
-  padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 0.875rem;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-input);
+  font-size: var(--text-sm);
   font-weight: 600;
   font-family: var(--font-ui);
   cursor: pointer;
   border: none;
-  transition: background 0.18s ease, transform 0.1s ease, opacity 0.18s ease;
+  transition: background var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out), opacity var(--dur-short) var(--ease-out);
   text-align: center;
   letter-spacing: 0.02em;
 }
@@ -293,19 +444,20 @@ body::after {
 .pm-btn:active:not(:disabled) { transform: scale(0.98); }
 
 .pm-btn-primary {
-  background: var(--pm-accent);
-  color: #1A1A1A;          /* texto escuro no fundo dourado */
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
   font-weight: 600;
 }
 .pm-btn-primary:hover:not(:disabled) { background: var(--pm-accent-hover); }
 .pm-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .pm-btn-secondary {
-  background: var(--ds-green-primary);   /* #344C31 */
-  color: var(--ds-white);
+  background: transparent;
+  border: var(--rule-hair) solid var(--color-rule-2);
+  color: var(--color-ink);
   font-weight: 600;
 }
-.pm-btn-secondary:hover:not(:disabled) { background: var(--pm-card-active); }
+.pm-btn-secondary:hover:not(:disabled) { background: var(--color-paper-3); }
 .pm-btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .pm-btn-ghost {
@@ -317,6 +469,7 @@ body::after {
   background: var(--pm-card);
   color: var(--pm-text);
 }
+.pm-btn-ghost:disabled { opacity: 0.55; cursor: not-allowed; }
 
 /* danger sobrepõe ghost */
 .pm-btn-danger {
@@ -330,14 +483,36 @@ body::after {
   display: block;
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   color: var(--pm-text-2);
-  margin-bottom: 8px;
+  margin-bottom: var(--space-xs);
+}
+
+/* Link tipográfico de troca de tela (auth) */
+.pm-switch-link {
+  background:    none;
+  border:        none;
+  font-family:   var(--font-ui);
+  font-size:     var(--text-sm);
+  font-weight:   600;
+  color:         var(--color-accent-deep);
+  cursor:        pointer;
+  padding:       0;
+  text-decoration: underline;
+  text-decoration-color: var(--color-rule-2);
+  text-underline-offset: 2px;
+  white-space:   nowrap;
+  transition:    color var(--dur-micro) var(--ease-out),
+                 text-decoration-color var(--dur-micro) var(--ease-out);
+}
+.pm-switch-link:hover {
+  color: var(--color-ink);
+  text-decoration-color: var(--color-accent);
 }
 
 /* =====================
-   Neon Progress Bar — variante interna (modal / card)
+   Progress Bar — variante interna (modal / card)
    ===================== */
 /* Posicionada absolutamente no topo do container pai.
    O pai deve ter position:relative e overflow:hidden. */
@@ -347,10 +522,10 @@ body::after {
   left:           0;
   width:          100%;
   height:         2px;
-  background:     rgba(57, 255, 20, 0.08);
+  background:     var(--color-accent-soft);
   overflow:       hidden;
   pointer-events: none;
-  z-index:        10;
+  z-index:        var(--z-raised);
 }
 
 .pm-modal-progress::after {
@@ -358,20 +533,19 @@ body::after {
   position:   absolute;
   top:        0;
   bottom:     0;
-  background: #39ff14;
-  box-shadow: 0 0 8px #39ff14, 0 0 14px #39ff14;
-  animation:  pm-progress-slide 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  background: var(--color-accent);
+  animation:  pm-progress-slide 1.8s var(--ease-in-out) infinite;
 }
 
 /* Modal overlay */
 .pm-overlay {
   position: fixed;
   inset: 0;
-  z-index: 2000;
+  z-index: var(--z-modal);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(2, 8, 1, 0.82);
+  background: color-mix(in oklch, var(--color-ink) 45%, transparent);
   backdrop-filter: blur(4px);
 }
 
@@ -380,13 +554,13 @@ body::after {
   position:     relative;          /* ancora .pm-modal-progress */
   overflow:     hidden;            /* clipa o bar pelo border-radius */
   background:   var(--pm-panel);
-  border:       1px solid var(--pm-border-bright);
-  border-radius: 16px;
-  box-shadow:   0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(247, 195, 95, 0.06);
+  border:       var(--rule-hair) solid var(--color-rule);
+  border-radius: var(--radius-card);
+  box-shadow:   var(--shadow-modal);
   width:        100%;
   max-width:    420px;
-  padding:      32px;
-  margin:       16px;
+  padding:      var(--space-xl);
+  margin:       var(--space-md);
 }
 
 /* =====================
@@ -429,10 +603,10 @@ body::after {
     width:         100%;
     max-width:     420px;
     background:    var(--pm-panel);
-    border:        1px solid var(--pm-border-bright);
-    border-radius: 16px;
-    padding:       32px 28px;
-    box-shadow:    0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(247, 195, 95, 0.06);
+    border:        var(--rule-hair) solid var(--color-rule);
+    border-radius: var(--radius-card);
+    padding:       var(--space-xl) var(--space-lg);
+    box-shadow:    var(--shadow-modal);
     overflow:      hidden;
     position:      relative;
   }
@@ -443,27 +617,26 @@ body::after {
    ===================== */
 .pm-zone-type-picker {
   position:        absolute;
-  top:             calc(100% + 8px);
+  top:             calc(100% + var(--space-xs));
   left:            0;
-  z-index:         1100;
+  z-index:         var(--z-dropdown);
   display:         flex;
   flex-direction:  column;
-  gap:             3px;
-  padding:         5px;
+  gap:             var(--space-3xs);
+  padding:         var(--space-2xs);
   min-width:       130px;
-  background:      rgba(38, 60, 40, 0.97);
-  border:          1px solid var(--pm-border-bright);
-  border-radius:   10px;
-  box-shadow:      0 8px 24px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(10px);
+  background:      var(--color-paper-2);
+  border:          var(--rule-hair) solid var(--color-rule);
+  border-radius:   var(--radius-card);
+  box-shadow:      var(--shadow-modal);
 }
 
 .pm-zone-type-option {
   display:        flex;
   align-items:    center;
-  gap:            8px;
+  gap:            var(--space-xs);
   width:          100%;
-  padding:        7px 10px;
+  padding:        var(--space-xs) var(--space-sm);
   border:         none;
   border-radius:  7px;
   background:     transparent;
@@ -473,19 +646,13 @@ body::after {
   font-weight:    500;
   cursor:         pointer;
   text-align:     left;
-  transition:     background 0.15s ease, color 0.15s ease;
+  transition:     background var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
   white-space:    nowrap;
 }
 
 .pm-zone-type-option:hover {
   background: var(--pm-card-hover);
   color:      var(--pm-text);
-}
-
-.pm-zone-type-emoji {
-  font-size:   1rem;
-  line-height: 1;
-  flex-shrink: 0;
 }
 
 /* =====================
@@ -496,7 +663,7 @@ body::after {
   bottom:          32px;
   left:            50%;
   transform:       translateX(-50%);
-  z-index:         1000;
+  z-index:         var(--z-toolbar);
   display:         flex;
   align-items:     center;
   gap:             8px;
@@ -504,8 +671,7 @@ body::after {
   border-radius:   24px;
   background:      var(--pm-panel);
   border:          1.5px solid var(--pm-accent);
-  box-shadow:      0 4px 20px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(12px);
+  box-shadow:      var(--shadow-whisper);
   color:           var(--pm-text-2);
   font-size:       0.8125rem;
   font-family:     var(--font-ui);
@@ -521,7 +687,7 @@ body::after {
   color:         var(--pm-text-3);
   font-size:     0.9rem;
   line-height:   1;
-  transition:    color 0.15s ease;
+  transition:    color var(--dur-micro) var(--ease-out);
   margin-left:   2px;
 }
 
@@ -560,7 +726,7 @@ body::after {
   top:             16px;
   left:            50%;
   transform:       translateX(-50%);
-  z-index:         1000;
+  z-index:         var(--z-toolbar);
   display:         flex;
   align-items:     center;
   justify-content: center;
@@ -594,10 +760,9 @@ body::after {
     align-items:     center;
     gap:             5px;
     padding:         4px 12px 4px 10px;
-    border-radius:   20px;
-    background:      rgba(38, 60, 40, 0.92);
-    border:          1px solid var(--pm-border-bright);
-    backdrop-filter: blur(8px);
+    border-radius:   var(--radius-pill);
+    background:      var(--color-paper-2);
+    border:          var(--rule-hair) solid var(--color-rule);
     font-size:       0.7rem;
     font-weight:     600;
     font-family:     var(--font-ui);
@@ -634,10 +799,10 @@ body::after {
   position:         fixed;
   inset:            0;
   bottom:           60px;
-  z-index:          1400;
-  background:       rgba(2, 8, 1, 0.65);
+  z-index:          var(--z-backdrop);
+  background:       color-mix(in oklch, var(--color-ink) 40%, transparent);
   backdrop-filter:  blur(2px);
-  animation:        pm-fade-in 0.2s ease both;
+  animation:        pm-fade-in var(--dur-short) var(--ease-out) both;
 }
 
 /* =====================
@@ -649,15 +814,15 @@ body::after {
   right:           0;
   bottom:          60px;
   height:          72vh;
-  z-index:         1500;
+  z-index:         var(--z-sheet);
   display:         flex;
   flex-direction:  column;
   background:      var(--pm-panel);
-  border-top:      1px solid var(--pm-border-bright);
-  border-radius:   16px 16px 0 0;
-  box-shadow:      0 -8px 32px rgba(0, 0, 0, 0.4);
+  border-top:      var(--rule-hair) solid var(--color-rule);
+  border-radius:   var(--radius-card) var(--radius-card) 0 0;
+  box-shadow:      var(--shadow-modal);
   transform:       translateY(100%);
-  transition:      transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:      transform var(--dur-long) var(--ease-out);
   overflow:        hidden;
 }
 
@@ -684,11 +849,11 @@ body::after {
   left:            0;
   right:           0;
   height:          60px;
-  z-index:         1600;
+  z-index:         var(--z-nav);
   display:         flex;
   align-items:     stretch;
   background:      var(--pm-panel);
-  border-top:      1px solid var(--pm-border-bright);
+  border-top:      var(--rule-hair) solid var(--color-rule);
   /* Suporte para safe-area do iPhone */
   padding-bottom:  env(safe-area-inset-bottom, 0px);
 }
@@ -703,7 +868,7 @@ body::after {
   background:      transparent;
   border:          none;
   cursor:          pointer;
-  transition:      background 0.15s ease;
+  transition:      background var(--dur-micro) var(--ease-out);
   min-width:       44px;
   -webkit-tap-highlight-color: transparent;
 }
@@ -721,7 +886,7 @@ body::after {
 }
 
 .pm-mobile-nav-label {
-  font-size:      0.6rem;
+  font-size:      0.75rem;
   font-weight:    600;
   font-family:    var(--font-ui);
   letter-spacing: 0.06em;
@@ -730,7 +895,7 @@ body::after {
 }
 
 .pm-mobile-nav-btn.active .pm-mobile-nav-label {
-  color: var(--pm-accent);
+  color: var(--color-accent-deep);
 }
 
 .pm-mobile-nav-btn:not(.active):not(:disabled) .pm-mobile-nav-label {
@@ -786,7 +951,7 @@ body::after {
   background: rgba(37, 99, 235, 0.06);
   top: 50%;
   left: 50%;
-  animation: geo-pulse 2.4s ease-out infinite;
+  animation: geo-pulse 2.4s var(--ease-out) infinite;
 }
 
 .user-loc-ring-static {
@@ -840,8 +1005,8 @@ body::after {
   line-height: 1.3;
   font-weight: 700;
   margin: 32px 0 12px;
-  padding-left: 12px;
-  border-left: 3px solid var(--pm-accent);
+  padding-top: 16px;
+  border-top: var(--rule-hair) solid var(--color-rule);
 }
 
 .pm-course-html h3 {
@@ -900,7 +1065,7 @@ body::after {
   font-family: var(--font-mono);
   font-size: 13px;
   background: var(--pm-card);
-  color: var(--pm-accent);
+  color: var(--color-accent-deep);
   padding: 2px 6px;
   border-radius: 4px;
   border: 1px solid var(--pm-border);
@@ -925,15 +1090,15 @@ body::after {
 }
 
 .pm-course-html a {
-  color: var(--pm-accent);
+  color: var(--color-accent-deep);
   text-decoration: underline;
-  text-decoration-color: var(--pm-accent-muted);
-  text-underline-offset: 3px;
-  transition: color 0.15s ease;
+  text-decoration-color: var(--color-rule-2);
+  text-underline-offset: 2px;
+  transition: color var(--dur-micro) var(--ease-out);
 }
 
 .pm-course-html a:hover {
-  color: var(--pm-accent-hover);
+  color: var(--color-ink);
 }
 
 .pm-course-html hr {
@@ -965,7 +1130,7 @@ body::after {
 }
 
 .pm-course-html tr:nth-child(even) td {
-  background: rgba(255, 255, 255, 0.02);
+  background: color-mix(in oklch, var(--color-ink) 3%, transparent);
 }
 
 .pm-course-html strong {
@@ -983,11 +1148,11 @@ body::after {
    ===================== */
 .pm-category-chips {
   display: flex;
-  gap: 8px;
+  gap: var(--space-xs);
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: 0 2px 4px;
+  padding: 0 var(--space-3xs) var(--space-2xs);
 }
 
 .pm-category-chips::-webkit-scrollbar {
@@ -997,9 +1162,9 @@ body::after {
 .pm-category-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 20px;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-pill);
   font-size: 0.8125rem;
   font-weight: 600;
   font-family: var(--font-ui);
@@ -1009,7 +1174,7 @@ body::after {
   border: 1px solid var(--pm-border-bright);
   background: transparent;
   color: var(--pm-text-2);
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: background var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
   flex-shrink: 0;
 }
 
@@ -1019,9 +1184,9 @@ body::after {
 }
 
 .pm-category-chip.active {
-  background: var(--pm-accent);
-  color: #1A1A1A;
-  border-color: var(--pm-accent);
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  border-color: var(--color-accent);
 }
 
 /* =====================
@@ -1036,7 +1201,7 @@ body::after {
 .pm-skeleton {
   background: var(--pm-card);
   border-radius: 6px;
-  animation: pm-skeleton-pulse 1.6s ease-in-out infinite;
+  animation: pm-skeleton-pulse 1.6s var(--ease-in-out) infinite;
 }
 
 /* =====================
@@ -1048,17 +1213,20 @@ body::after {
   left: 0;
   width: 100%;
   height: 3px;
-  background: var(--pm-border);
-  z-index: 10;
+  background: var(--color-accent-soft);
+  z-index: var(--z-raised);
   flex-shrink: 0;
 }
 
+/* Consumidor define --progress: 0..1 (transform, nunca width — gate 14) */
 .pm-reading-progress-fill {
   height: 100%;
-  background: var(--pm-accent);
-  transition: width 0.1s linear;
+  width: 100%;
+  background: var(--color-accent);
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+  transition: transform var(--dur-micro) linear;
   border-radius: 0 2px 2px 0;
-  box-shadow: 0 0 6px var(--pm-accent-muted);
 }
 
 /* =====================
@@ -1067,7 +1235,7 @@ body::after {
 .pm-course-viewer {
   position: absolute;
   inset: 0;
-  z-index: 500;
+  z-index: var(--z-course);
   background: var(--pm-void);
   display: flex;
   flex-direction: column;
@@ -1077,18 +1245,18 @@ body::after {
 .pm-course-viewer-header {
   background: var(--pm-panel);
   border-bottom: 1px solid var(--pm-border);
-  padding: 16px 24px;
+  padding: var(--space-md) var(--space-lg);
   flex-shrink: 0;
 }
 
 .pm-course-viewer-body {
   flex: 1;
   overflow-y: auto;
-  padding: 32px 24px;
+  padding: var(--space-xl) var(--space-lg);
 }
 
 .pm-course-viewer-content {
-  max-width: 740px;
+  max-width: 65ch;
   margin: 0 auto;
 }
 

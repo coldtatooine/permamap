@@ -31,7 +31,7 @@ export function AuthScreen() {
       style={{
         position:   'fixed',
         inset:      0,
-        zIndex:     9999,
+        zIndex:     'var(--z-modal)',
         display:    'flex',
         background: 'var(--pm-void)',
         overflow:   'hidden',
@@ -47,7 +47,7 @@ export function AuthScreen() {
           width:          '44%',
           minWidth:       '340px',
           maxWidth:       '560px',
-          background:     'var(--ds-gradient-hero)',
+          background:     'linear-gradient(to right, var(--color-brand-panel), var(--color-brand-panel-2))',
           display:        'flex',
           flexDirection:  'column',
           padding:        '48px 52px',
@@ -111,36 +111,37 @@ export function AuthScreen() {
               fontWeight:    700,
               letterSpacing: '0.16em',
               textTransform: 'uppercase',
-              color:         'var(--pm-accent)',
+              color:         'var(--color-accent-on-dark)',
               marginBottom:  '16px',
             }}
           >
             Zoneamento em permacultura
           </p>
 
-          {/* Headline principal */}
+          {/* Headline principal — Fraunces roman, peso comprometido */}
           <h1
             style={{
               fontFamily:    'var(--font-display)',
-              fontSize:      'clamp(1.6rem, 2.2vw, 2.1rem)',
-              fontWeight:    600,
-              color:         'var(--pm-text)',
-              lineHeight:    1.25,
-              letterSpacing: '-0.01em',
+              fontSize:      'clamp(2rem, 2.6vw, 2.6rem)',
+              fontWeight:    650,
+              color:         'var(--color-paper)',
+              lineHeight:    1.15,
+              letterSpacing: 'var(--tracking-display)',
+              overflowWrap:  'anywhere',
+              minWidth:      0,
             }}
           >
             Mapeie sua propriedade com sabedoria.
           </h1>
 
-          {/* Separador dourado */}
+          {/* Separador — hairline accent */}
           <div
             style={{
               width:        '40px',
               height:       '2px',
-              background:   'var(--pm-accent)',
+              background:   'var(--color-accent-on-dark)',
               borderRadius: '2px',
               margin:       '24px 0',
-              opacity:      0.8,
             }}
           />
 
@@ -149,7 +150,7 @@ export function AuthScreen() {
             style={{
               fontFamily: 'var(--font-ui)',
               fontSize:   '0.875rem',
-              color:      'rgba(255,255,255,0.60)',
+              color:      'var(--color-paper-80)',
               lineHeight: 1.65,
               maxWidth:   '320px',
             }}
@@ -189,7 +190,7 @@ export function AuthScreen() {
                   style={{
                     fontFamily:    'var(--font-mono)',
                     fontSize:      '0.6rem',
-                    color:         'rgba(255,255,255,0.38)',
+                    color:         'var(--color-paper-80)',
                     letterSpacing: '0.04em',
                   }}
                 >
@@ -200,19 +201,18 @@ export function AuthScreen() {
           </div>
         </div>
 
-        {/* Citação de rodapé */}
+        {/* Citação de rodapé — Fraunces roman, quebra natural */}
         <p
           style={{
             fontFamily: 'var(--font-display)',
             fontSize:   '0.8125rem',
-            fontStyle:  'italic',
-            color:      'rgba(255,255,255,0.35)',
+            color:      'var(--color-accent-on-dark)',
             lineHeight: 1.6,
             position:   'relative',
+            maxWidth:   '34ch',
           }}
         >
-          "A permacultura é a arte de criar ecossistemas
-          <br />que trabalham com a natureza, não contra ela."
+          “A permacultura é a arte de criar ecossistemas que trabalham com a natureza, não contra ela.”
         </p>
       </div>
 

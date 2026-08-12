@@ -1,4 +1,4 @@
-export { colors, background, border, text, action, zone } from './colors';
+export { zone } from './colors';
 export type { ZoneNumber } from './colors';
 export { typography, fontFamily, fontSize, fontWeight, letterSpacing } from './typography';
 export { animation, duration, easing } from './animation';

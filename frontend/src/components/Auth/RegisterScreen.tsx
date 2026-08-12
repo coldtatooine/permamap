@@ -63,7 +63,7 @@ export function RegisterScreen({ onSwitchToLogin }: RegisterScreenProps) {
             height:         '56px',
             borderRadius:   '50%',
             background:     'var(--pm-accent-muted)',
-            border:         '1.5px solid rgba(247,195,95,0.35)',
+            border:         '1.5px solid var(--color-accent)',
             display:        'flex',
             alignItems:     'center',
             justifyContent: 'center',
@@ -71,7 +71,7 @@ export function RegisterScreen({ onSwitchToLogin }: RegisterScreenProps) {
           }}
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-            stroke="var(--pm-accent)" strokeWidth="1.8"
+            stroke="var(--color-accent-deep)" strokeWidth="1.8"
             strokeLinecap="round" strokeLinejoin="round">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
             <polyline points="22,6 12,13 2,6" />
@@ -85,7 +85,9 @@ export function RegisterScreen({ onSwitchToLogin }: RegisterScreenProps) {
             fontWeight:    600,
             color:         'var(--pm-text)',
             lineHeight:    1.2,
-            letterSpacing: '-0.01em',
+            letterSpacing: 'var(--tracking-display)',
+            overflowWrap:  'anywhere',
+            minWidth:      0,
             marginBottom:  '12px',
           }}
         >
@@ -101,7 +103,7 @@ export function RegisterScreen({ onSwitchToLogin }: RegisterScreenProps) {
           }}
         >
           Enviamos um link de ativação para{' '}
-          <strong style={{ color: 'var(--pm-accent)', fontWeight: 600 }}>{email}</strong>.{' '}
+          <strong style={{ color: 'var(--color-accent-deep)', fontWeight: 600 }}>{email}</strong>.{' '}
           Acesse sua caixa de entrada e clique no link para ativar a conta.
         </p>
 
@@ -143,7 +145,9 @@ export function RegisterScreen({ onSwitchToLogin }: RegisterScreenProps) {
             fontWeight:    600,
             color:         'var(--pm-text)',
             lineHeight:    1.2,
-            letterSpacing: '-0.01em',
+            letterSpacing: 'var(--tracking-display)',
+            overflowWrap:  'anywhere',
+            minWidth:      0,
           }}
         >
           Criar conta
@@ -212,23 +216,7 @@ export function RegisterScreen({ onSwitchToLogin }: RegisterScreenProps) {
 
 function SwitchLink({ onClick, children }: { onClick: () => void; children: ReactNode }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      style={{
-        background:  'none',
-        border:      'none',
-        fontFamily:  'var(--font-ui)',
-        fontSize:    '0.875rem',
-        fontWeight:  600,
-        color:       'var(--pm-accent)',
-        cursor:      'pointer',
-        padding:     0,
-        transition:  'opacity 0.15s',
-      }}
-      onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.75'; }}
-      onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
-    >
+    <button type="button" onClick={onClick} className="pm-switch-link">
       {children}
     </button>
   );

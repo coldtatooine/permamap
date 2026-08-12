@@ -74,8 +74,8 @@ export function ZoneForm({ onClose }: Props) {
               display:        'flex',
               alignItems:     'center',
               justifyContent: 'center',
-              background:     `${previewColor}18`,
-              border:         `1.5px solid ${previewColor}50`,
+              background:     `color-mix(in oklch, ${previewColor} 12%, transparent)`,
+              border:         `1.5px solid color-mix(in oklch, ${previewColor} 40%, transparent)`,
               fontFamily:     'var(--font-mono)',
               fontSize:       '13px',
               color:          previewColor,
@@ -108,8 +108,11 @@ export function ZoneForm({ onClose }: Props) {
 
         {/* Barra de cor preview */}
         <div
-          className="h-1 w-full rounded-full transition-all duration-300"
-          style={{ background: `linear-gradient(to right, ${previewColor}60, ${previewColor})` }}
+          className="h-1 w-full rounded-full"
+          style={{
+            background: `linear-gradient(to right, color-mix(in oklch, ${previewColor} 38%, transparent), ${previewColor})`,
+            transition: 'background var(--dur-short) var(--ease-out)',
+          }}
         />
 
         {/* Nome */}

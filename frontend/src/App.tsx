@@ -10,7 +10,7 @@ import { useAuthStore } from './store/useAuthStore';
 import { useGeolocation } from './hooks/useGeolocation';
 import { useResponsive } from './hooks/useResponsive';
 import { supabase } from './lib/supabase';
-import { Sidebar, SidebarHeader, SidebarToggle } from '@permamap/ui';
+import { Sidebar, SidebarHeader, SidebarToggle, Icon } from '@permamap/ui';
 import { UserFooter } from './components/Sidebar/UserFooter';
 import { UniversityAdmin } from './components/University/Admin/UniversityAdmin';
 import { UniversityView } from './components/University/UniversityView';
@@ -18,6 +18,8 @@ import permamapLogo from './assets/permamap-logo-full.svg';
 
 const LEFT_WIDTH  = 220;
 const RIGHT_WIDTH = 280;
+/** Feature flag: Permamap U oculta do produto até o lançamento. */
+const SHOW_UNIVERSITY = false;
 
 export default function App() {
   const { property, isLoading, activePanel, setActivePanel } = useMapStore();
@@ -124,7 +126,7 @@ export default function App() {
             bottom:   '60px',  /* altura da nav */
           }}
         >
-          {activePanel === 'university'
+          {SHOW_UNIVERSITY && activePanel === 'university'
             ? (isAdmin ? <UniversityAdmin /> : <UniversityView />)
             : <MapView />
           }
@@ -152,13 +154,21 @@ export default function App() {
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             <PropertyListPanel />
           </div>
-          <button
-            className="pm-btn pm-btn-ghost"
-            onClick={() => setActivePanel(activePanel === 'university' ? 'map' : 'university')}
-            style={{ margin: '8px 12px', fontSize: '13px' }}
-          >
-            {activePanel === 'university' ? '← Mapa' : '🎓 Permamap U'}
-          </button>
+          {SHOW_UNIVERSITY && (
+            <button
+              className="pm-btn pm-btn-ghost"
+              onClick={() => setActivePanel(activePanel === 'university' ? 'map' : 'university')}
+              style={{ margin: '8px 12px', fontSize: '13px' }}
+            >
+              {activePanel === 'university'
+                ? '← Mapa'
+                : (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-xs)', justifyContent: 'center' }}>
+                    <Icon name="layers" size={14} color="currentColor" /> Permamap U
+                  </span>
+                )}
+            </button>
+          )}
           <UserFooter />
         </div>
 
@@ -189,7 +199,7 @@ export default function App() {
   //  Layout Desktop / Tablet (≥ 768px)
   // ════════════════════════════════════════════════
   return (
-    <div className="flex h-screen w-screen overflow-hidden" style={{ background: 'var(--pm-void)' }}>
+    <div className="flex h-screen w-full overflow-hidden" style={{ background: 'var(--pm-void)' }}>
       {isLoading && <div className="pm-top-progress" />}
 
       {/* ── Left Sidebar — lista de propriedades ── */}
@@ -202,13 +212,21 @@ export default function App() {
           />
         </SidebarHeader>
         <PropertyListPanel />
-        <button
-          className="pm-btn pm-btn-ghost"
-          onClick={() => setActivePanel(activePanel === 'university' ? 'map' : 'university')}
-          style={{ margin: '8px 12px', fontSize: '13px' }}
-        >
-          {activePanel === 'university' ? '← Mapa' : '🎓 Permamap U'}
-        </button>
+        {SHOW_UNIVERSITY && (
+          <button
+            className="pm-btn pm-btn-ghost"
+            onClick={() => setActivePanel(activePanel === 'university' ? 'map' : 'university')}
+            style={{ margin: '8px 12px', fontSize: '13px' }}
+          >
+            {activePanel === 'university'
+              ? '← Mapa'
+              : (
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-xs)', justifyContent: 'center' }}>
+                  <Icon name="layers" size={14} color="currentColor" /> Permamap U
+                </span>
+              )}
+          </button>
+        )}
         <UserFooter />
       </Sidebar>
 
@@ -222,7 +240,7 @@ export default function App() {
 
       {/* ── Conteúdo principal — Mapa ou Permamap U ── */}
       <main className="flex-1 relative overflow-hidden">
-        {activePanel === 'university'
+        {SHOW_UNIVERSITY && activePanel === 'university'
           ? (isAdmin ? <UniversityAdmin /> : <UniversityView />)
           : <MapView />
         }

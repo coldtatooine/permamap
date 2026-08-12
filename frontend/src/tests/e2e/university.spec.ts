@@ -9,7 +9,8 @@
 
 import { test, expect } from '@playwright/test';
 
-test.describe('Permamap U — Listagem de Cursos', () => {
+// Skip: Permamap U oculta do produto (SHOW_UNIVERSITY = false em App.tsx)
+test.describe.skip('Permamap U — Listagem de Cursos', () => {
   test.beforeEach(async ({ page }) => {
     // Navega para o app — auth gerenciada pelo Supabase Auth
     await page.goto('http://localhost:5173');

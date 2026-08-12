@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMapStore } from '../../store/useMapStore';
 import { useProperty } from '../../hooks/useProperty';
-import { Icon, Dialog } from '@permamap/ui';
+import { Icon, Alert } from '@permamap/ui';
 import { ElementEditForm } from '../Forms/ElementEditForm';
-import { POI_TYPE_DEFINITIONS } from '../../types';
-import type { GeoJSONGeometry } from '../../types';
+import type { Element, GeoJSONGeometry } from '../../types';
 
 function getElementCenter(geom: GeoJSONGeometry): [number, number] {
   if (geom.type === 'Point') return [geom.coordinates[1], geom.coordinates[0]];
@@ -47,8 +46,42 @@ export function ElementPanel() {
   const { elements, zones, setPendingFlyTo } = useMapStore();
   const { deleteElement } = useProperty();
   const [editingElementId, setEditingElementId] = useState<string | null>(null);
-  const [elementToDelete, setElementToDelete]   = useState<{ id: string; label: string } | null>(null);
-  const [isDeleting, setIsDeleting]             = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<{ element: Element; label: string } | null>(null);
+  const [deleteError, setDeleteError]     = useState<string | null>(null);
+  const deleteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (deleteTimer.current) clearTimeout(deleteTimer.current);
+  }, []);
+
+  // Delete otimista + Undo (8s) — sem confirmation dialog (design.md § Microinteractions)
+  function handleDelete(id: string, label: string) {
+    const snapshot = useMapStore.getState().elements.find((el) => el.id === id);
+    if (!snapshot) return;
+    if (pendingDelete) void commitDelete(pendingDelete);
+    if (deleteTimer.current) clearTimeout(deleteTimer.current);
+    useMapStore.getState().removeElement(id);
+    setDeleteError(null);
+    setPendingDelete({ element: snapshot, label });
+    deleteTimer.current = setTimeout(() => { void commitDelete({ element: snapshot, label }); }, 8000);
+  }
+
+  async function commitDelete(pending: { element: Element; label: string }) {
+    const res = await deleteElement(pending.element.id);
+    if (!res.success) {
+      useMapStore.getState().setElements([...useMapStore.getState().elements, pending.element]);
+      setDeleteError(res.error ?? 'Erro ao excluir elemento.');
+    }
+    setPendingDelete((cur) => (cur?.element.id === pending.element.id ? null : cur));
+  }
+
+  function handleUndo() {
+    if (deleteTimer.current) clearTimeout(deleteTimer.current);
+    if (pendingDelete) {
+      useMapStore.getState().setElements([...useMapStore.getState().elements, pendingDelete.element]);
+    }
+    setPendingDelete(null);
+  }
 
   if (elements.length === 0) {
     return (
@@ -80,7 +113,39 @@ export function ElementPanel() {
   });
 
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-xs)', padding: 'var(--space-sm)' }}>
+
+      {/* Barra de Undo — delete otimista (8s) */}
+      {pendingDelete && (
+        <div
+          className="pm-animate-in"
+          role="status"
+          style={{
+            display: 'flex', alignItems: 'center', gap: 'var(--space-sm)',
+            padding: 'var(--space-xs) var(--space-sm)',
+            background: 'var(--pm-card)', border: '1px solid var(--color-rule)',
+            borderRadius: 'var(--radius-input)',
+            fontSize: '0.8125rem', color: 'var(--pm-text-2)', fontFamily: 'var(--font-ui)',
+          }}
+        >
+          <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            “{pendingDelete.label}” removido
+          </span>
+          <button
+            onClick={handleUndo}
+            style={{
+              background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+              color: 'var(--color-accent-deep)', fontWeight: 700, fontSize: 'inherit',
+              fontFamily: 'inherit', flexShrink: 0,
+            }}
+          >
+            Desfazer
+          </button>
+        </div>
+      )}
+
+      {deleteError && <Alert variant="danger">{deleteError}</Alert>}
+
       {sorted.map((el, i) => {
         const zone      = zones.find((z) => z.id === el.zone_id);
         const zoneColor = zone?.color ?? 'var(--pm-border-bright)';
@@ -89,36 +154,28 @@ export function ElementPanel() {
           ?? TYPE_LABEL[el.type]
           ?? el.type;
 
-        // Emoji para POI, ícone SVG para outros tipos
-        const poiDef    = el.type === 'poi' && el.metadata_json.poi_type
-          ? POI_TYPE_DEFINITIONS[el.metadata_json.poi_type]
-          : null;
-
         const area = el.metadata_json.area_m2;
 
         return (
           <div
             key={el.id}
             className="pm-zone-card pm-animate-in"
-            style={{ borderLeft: `3px solid ${zoneColor}`, animationDelay: `${i * 30}ms` }}
+            style={{ animationDelay: `${i * 30}ms` }}
             onClick={() => setPendingFlyTo(getElementCenter(el.geometry_geojson))}
             role="button"
             tabIndex={0}
             onKeyDown={(e) => e.key === 'Enter' && setPendingFlyTo(getElementCenter(el.geometry_geojson))}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px 10px 14px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', padding: 'var(--space-xs) var(--space-sm)' }}>
 
-              {/* ── Badge emoji / ícone ── */}
+              {/* ── Badge com ícone (emoji de POI só no marker do mapa) ── */}
               <div style={{
                 width: '32px', height: '32px', borderRadius: '8px', flexShrink: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: `${zoneColor}15`,
-                border: `1.5px solid ${zoneColor}35`,
+                background: `color-mix(in oklch, ${zoneColor} 12%, transparent)`,
+                border: `1.5px solid color-mix(in oklch, ${zoneColor} 35%, transparent)`,
               }}>
-                {poiDef
-                  ? <span style={{ fontSize: '15px', lineHeight: 1 }}>{poiDef.emoji}</span>
-                  : <Icon name={TYPE_ICON[el.type] ?? 'map-pin'} size={14} color={zoneColor} />
-                }
+                <Icon name={TYPE_ICON[el.type] ?? 'map-pin'} size={14} color={zoneColor} />
               </div>
 
               {/* ── Conteúdo ── */}
@@ -146,7 +203,7 @@ export function ElementPanel() {
 
                   {/* Número da zona */}
                   <span style={{
-                    fontFamily: 'var(--font-mono)', fontSize: '0.65rem',
+                    fontFamily: 'var(--font-mono)', fontSize: '0.75rem',
                     fontWeight: 700, color: zoneColor, flexShrink: 0,
                   }}>
                     Z{zone?.zone_number ?? '?'}
@@ -155,7 +212,7 @@ export function ElementPanel() {
                   {/* Nome da zona */}
                   {zone && (
                     <span style={{
-                      fontSize: '0.68rem', color: 'var(--pm-text-3)', fontFamily: 'var(--font-ui)',
+                      fontSize: '0.8125rem', color: 'var(--pm-text-3)', fontFamily: 'var(--font-ui)',
                       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                     }}>
                       · {zone.name}
@@ -165,7 +222,7 @@ export function ElementPanel() {
                   {/* Área */}
                   {area != null && (
                     <span style={{
-                      fontSize: '0.68rem', color: 'var(--pm-text-2)',
+                      fontSize: '0.8125rem', color: 'var(--pm-text-2)',
                       fontFamily: 'var(--font-mono)', flexShrink: 0, marginLeft: '2px',
                     }}>
                       · {formatArea(area)}
@@ -174,14 +231,15 @@ export function ElementPanel() {
                 </div>
               </div>
 
-              {/* ── Ações (hover) ── */}
-              <div style={{ display: 'flex', gap: '2px', flexShrink: 0 }}>
+              {/* ── Ações (hover / focus-within / touch) ── */}
+              <div style={{ display: 'flex', gap: 'var(--space-3xs)', flexShrink: 0 }}>
                 <button
                   className="pm-edit-btn"
                   style={{
                     background: 'none', border: 'none', cursor: 'pointer',
                     padding: '5px', borderRadius: '5px', color: 'var(--pm-text-3)',
-                    display: 'flex', alignItems: 'center', transition: 'color 0.15s ease',
+                    display: 'flex', alignItems: 'center',
+                    transition: 'color var(--dur-micro) var(--ease-out)',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--pm-text)')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--pm-text-3)')}
@@ -200,11 +258,12 @@ export function ElementPanel() {
                   style={{
                     background: 'none', border: 'none', cursor: 'pointer',
                     padding: '5px', borderRadius: '5px', color: 'var(--pm-text-3)',
-                    display: 'flex', alignItems: 'center', transition: 'color 0.15s ease',
+                    display: 'flex', alignItems: 'center',
+                    transition: 'color var(--dur-micro) var(--ease-out)',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--pm-danger)')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--pm-text-3)')}
-                  onClick={(e) => { e.stopPropagation(); setElementToDelete({ id: el.id, label }); }}
+                  onClick={(e) => { e.stopPropagation(); handleDelete(el.id, label); }}
                   title="Remover"
                 >
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
@@ -224,25 +283,6 @@ export function ElementPanel() {
       {editingElement && (
         <ElementEditForm element={editingElement} onClose={() => setEditingElementId(null)} />
       )}
-
-      <Dialog
-        open={!!elementToDelete}
-        title="Excluir Elemento?"
-        description={`Tem certeza que deseja remover "${elementToDelete?.label}" definitivamente do mapa?`}
-        confirmText="Excluir Elemento"
-        cancelText="Cancelar"
-        variant="danger"
-        loading={isDeleting}
-        onConfirm={async () => {
-          if (!elementToDelete) return;
-          setIsDeleting(true);
-          const res = await deleteElement(elementToDelete.id);
-          setIsDeleting(false);
-          if (!res.success) alert(res.error);
-          else setElementToDelete(null);
-        }}
-        onCancel={() => setElementToDelete(null)}
-      />
     </div>
   );
 }

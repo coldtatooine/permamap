@@ -19,6 +19,7 @@ Welcome to **Permamap**, the ultimate web app for designing and visualizing perm
 
 ## 🛠️ Tech Stack
 
+- **Package Manager**: pnpm 11 (workspace)
 - **Frontend**: React 19, TypeScript, Vite, TailwindCSS v4
 - **Map**: Leaflet.js with react-leaflet and leaflet-draw
 - **Backend**: Supabase (PostgreSQL + PostGIS)

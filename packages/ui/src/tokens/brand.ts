@@ -1,46 +1,60 @@
 // =====================
 // Brand Tokens — Permamap
-// Paleta "Agricultural Modern" (marketing, landing, branding)
+// Sincronizado com design.md (Hallmark custom "green light" — light / roman-serif / chromatic-green ~145°)
+// Fonte de verdade das CSS vars: frontend/src/index.css (:root)
+// Chaves legadas (golden, greenPrimary…) preservadas como aliases p/ compat.
 // =====================
-// Fonte de verdade: sincronize com as CSS vars em frontend/src/index.css (--ds-*)
 
 export const brandColors = {
-  // Primárias
-  golden:          '#F7C35F',   // Ação primária, destaques, ícones
-  greenPrimary:    '#344C31',   // Fundo de containers, ações secundárias
-  greenSecondary:  '#263C28',   // Fundo de cards, containers internos
+  // Canônicas (design.md)
+  paper:      'oklch(96.5% 0.015 130)',
+  paper2:     'oklch(93.5% 0.020 130)',
+  paper3:     'oklch(90% 0.022 128)',
+  ink:        'oklch(21% 0.012 140)',
+  ink2:       'oklch(38% 0.012 140)',
+  muted:      'oklch(52% 0.012 135)',
+  rule:       'oklch(80% 0.016 132)',
+  rule2:      'oklch(72% 0.016 134)',
+  accent:     'oklch(56% 0.15 145)',
+  accentDeep: 'oklch(42% 0.13 145)',
+  accentInk:  'oklch(21% 0.012 140)',
+  accentSoft: 'oklch(91% 0.045 140)',
+  focus:      'oklch(52% 0.19 145)',
 
-  // Neutras
-  black:           '#1A1A1A',   // Texto em fundos claros, fundo de página
-  blackDeep:       '#0F0F0F',   // Seção alternativa de fundo
-  white:           '#FFFFFF',   // Texto em fundos escuros, ícones
+  // Legadas (aliases — não usar em código novo)
+  golden:         'oklch(56% 0.15 145)',   // → accent
+  greenPrimary:   'oklch(35% 0.06 142)',   // superfície escura de marketing
+  greenSecondary: 'oklch(28% 0.05 142)',
+  black:          'oklch(21% 0.012 140)',  // → ink
+  blackDeep:      'oklch(16% 0.01 140)',
+  white:          'oklch(96.5% 0.015 130)', // → paper
 
-  // Opacidade (white)
-  white80:  'rgba(255, 255, 255, 0.8)',  // Texto secundário
-  white50:  'rgba(255, 255, 255, 0.5)',  // Placeholder
-  white20:  'rgba(255, 255, 255, 0.2)',  // Divisores, bordas
-
-  // Opacidade (black overlay)
-  black80:  'rgba(0, 0, 0, 0.8)',
-  black40:  'rgba(0, 0, 0, 0.4)',
-  black30:  'rgba(0, 0, 0, 0.3)',
+  // Overlays sobre imagem (alpha é modificador, não cor)
+  white80: 'oklch(96.5% 0.015 130 / 0.8)',
+  white50: 'oklch(96.5% 0.015 130 / 0.5)',
+  white20: 'oklch(96.5% 0.015 130 / 0.2)',
+  black80: 'oklch(21% 0.012 140 / 0.8)',
+  black40: 'oklch(21% 0.012 140 / 0.4)',
+  black30: 'oklch(21% 0.012 140 / 0.3)',
 } as const;
 
 export const brandGradients = {
-  /** Gradiente de overlay em cards de projeto (bottom → top) */
-  overlay: 'linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.4), transparent)',
-  /** Gradiente hero de fundo (left → right) */
-  hero:    'linear-gradient(to right, #344c31, #263c28)',
+  /** Gradiente de overlay em cards (bottom → top) */
+  overlay: 'linear-gradient(to top, oklch(21% 0.012 140 / 0.8), oklch(21% 0.012 140 / 0.4), transparent)',
+  /** Gradiente hero de fundo (left → right) — dois stops apenas */
+  hero:    'linear-gradient(to right, oklch(35% 0.06 142), oklch(28% 0.05 142))',
 } as const;
 
 export const brandTypography = {
   fontFamily: {
-    /** Livvic — headers, botões, ênfase */
-    heading: "'Livvic', sans-serif",
-    /** Century Gothic — body, descrições */
-    body:    "'Century Gothic', 'AppleGothic', sans-serif",
-    /** Johnstown Demo — display / hero headlines */
-    display: "'Johnstown Demo', serif",
+    /** Fraunces — headers, display, wordmark (roman apenas; itálico nunca em heading) */
+    heading: "'Fraunces', ui-serif, Georgia, serif",
+    /** Manrope — body, UI, descrições */
+    body:    "'Manrope', ui-sans-serif, system-ui, sans-serif",
+    /** Fraunces — display / hero headlines */
+    display: "'Fraunces', ui-serif, Georgia, serif",
+    /** Syne Mono — outlier: coordenadas e dados tabulares */
+    mono:    "'Syne Mono', ui-monospace, monospace",
   },
   fontSize: {
     tag:     '11px',
@@ -53,24 +67,22 @@ export const brandTypography = {
     '3xl':   '24px',
     '4xl':   '28px',
     h1:      '50px',
-    display: '50px',
+    display: 'clamp(2.75rem, 5vw + 1rem, 5.25rem)',
   },
 } as const;
 
 export const brandSpacing = {
-  xs:   '5px',
-  sm:   '10px',
-  md:   '15px',
-  lg:   '20px',
-  xl:   '25px',
-  '2xl': '30px',
-  '3xl': '40px',
-  '4xl': '50px',
-  '5xl': '60px',
-  '6xl': '80px',
-  '7xl': '100px',
-  '8xl': '120px',
-  section: '240px',   // padding horizontal de seções
+  '3xs': '2px',
+  '2xs': '4px',
+  xs:   '8px',
+  sm:   '12px',
+  md:   '16px',
+  lg:   '24px',
+  xl:   '40px',
+  '2xl': '64px',
+  '3xl': '96px',
+  '4xl': '144px',
+  section: '240px',   // padding horizontal de seções (marketing)
 } as const;
 
 export const brandRadius = {
@@ -83,9 +95,9 @@ export const brandRadius = {
 } as const;
 
 export const brandShadows = {
-  sm:  '0 2px 4px rgba(0, 0, 0, 0.1)',
-  md:  '0 4px 8px rgba(0, 0, 0, 0.15)',
-  lg:  '0 8px 16px rgba(0, 0, 0, 0.2)',
+  sm:  '0 1px 2px oklch(21% 0.012 140 / 0.06)',   // whisper
+  md:  '0 4px 8px oklch(21% 0.012 140 / 0.10)',
+  lg:  '0 8px 16px oklch(21% 0.012 140 / 0.14)',
 } as const;
 
 export const brand = {

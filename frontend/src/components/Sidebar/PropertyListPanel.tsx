@@ -61,7 +61,7 @@ export function PropertyListPanel() {
                     border:       'none',
                     borderLeft:   isActive ? '2px solid var(--pm-accent)' : '2px solid transparent',
                     cursor:       'pointer',
-                    transition:   'background 0.15s ease, color 0.15s ease',
+                    transition:   'background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out)',
                     overflow:     'hidden',
                     textOverflow: 'ellipsis',
                     whiteSpace:   'nowrap',

@@ -35,7 +35,7 @@ export function Stepper({ steps, currentNum, className = '' }: StepperProps) {
                   fontSize:   '0.7rem',
                   fontWeight: 700,
                   fontFamily: 'var(--font-mono)',
-                  transition: 'all 0.3s ease',
+                  transition: 'background-color var(--dur-short) var(--ease-out), border-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out)',
                   background: done
                     ? 'var(--pm-accent)'
                     : current
@@ -43,11 +43,10 @@ export function Stepper({ steps, currentNum, className = '' }: StepperProps) {
                     : 'var(--pm-card)',
                   border: `1.5px solid ${done || current ? 'var(--pm-accent)' : 'var(--pm-border-bright)'}`,
                   color: done
-                    ? '#1A1A1A'
+                    ? 'var(--color-accent-ink)'
                     : current
-                    ? 'var(--pm-accent)'
+                    ? 'var(--color-accent-deep)'
                     : 'var(--pm-text-3)',
-                  boxShadow: current ? '0 0 12px var(--pm-accent-muted)' : 'none',
                 }}
               >
                 {done ? '✓' : step.num}
@@ -71,7 +70,7 @@ export function Stepper({ steps, currentNum, className = '' }: StepperProps) {
                   width:      '40px',
                   height:     '1px',
                   margin:     '0 4px 16px',
-                  transition: 'background 0.5s ease',
+                  transition: 'background-color var(--dur-long) var(--ease-out)',
                   background: done ? 'var(--pm-accent)' : 'var(--pm-border-bright)',
                 }}
               />

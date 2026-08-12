@@ -1,7 +1,7 @@
 import React from 'react';
 
 // =====================
-// Input — campo de texto dark-themed
+// Input — campo de texto
 // =====================
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -24,30 +24,22 @@ export function Input({ label, error, hint, id, className = '', ...props }: Inpu
         id={inputId}
         className={[
           'pm-input',
-          error ? 'border-[var(--pm-danger)] focus:shadow-[0_0_0_3px_var(--pm-danger-muted)]' : '',
+          error ? 'border-[var(--pm-danger)]' : '',
           className,
         ].filter(Boolean).join(' ')}
         aria-describedby={error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined}
         aria-invalid={error ? true : undefined}
         {...props}
       />
-      {error && (
-        <span
-          id={`${inputId}-error`}
-          role="alert"
-          className="text-[var(--pm-danger)] text-xs font-[var(--font-ui)]"
-        >
-          {error}
-        </span>
-      )}
-      {!error && hint && (
-        <span
-          id={`${inputId}-hint`}
-          className="text-[var(--pm-text-3)] text-xs font-[var(--font-ui)]"
-        >
-          {hint}
-        </span>
-      )}
+      {/* Slot sempre reservado (min-height: 1lh) — erro aparecendo não empurra o layout */}
+      <span
+        id={error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined}
+        role={error ? 'alert' : undefined}
+        className={`text-xs font-[var(--font-ui)] ${error ? 'text-[var(--color-danger-deep)]' : 'text-[var(--pm-text-2)]'}`}
+        style={{ display: 'block', minHeight: '1lh' }}
+      >
+        {error ?? hint ?? ''}
+      </span>
     </div>
   );
 }
@@ -78,16 +70,21 @@ export function Select({ label, error, id, className = '', children, ...props }:
           error ? 'border-[var(--pm-danger)]' : '',
           className,
         ].filter(Boolean).join(' ')}
+        aria-describedby={error ? `${selectId}-error` : undefined}
         aria-invalid={error ? true : undefined}
         {...props}
       >
         {children}
       </select>
-      {error && (
-        <span role="alert" className="text-[var(--pm-danger)] text-xs">
-          {error}
-        </span>
-      )}
+      {/* Slot sempre reservado (min-height: 1lh) — erro aparecendo não empurra o layout */}
+      <span
+        id={error ? `${selectId}-error` : undefined}
+        role={error ? 'alert' : undefined}
+        className={`text-xs font-[var(--font-ui)] ${error ? 'text-[var(--color-danger-deep)]' : 'text-[var(--pm-text-2)]'}`}
+        style={{ display: 'block', minHeight: '1lh' }}
+      >
+        {error ?? ''}
+      </span>
     </div>
   );
 }
@@ -120,14 +117,19 @@ export function Textarea({ label, error, id, rows = 3, className = '', ...props 
           error ? 'border-[var(--pm-danger)]' : '',
           className,
         ].filter(Boolean).join(' ')}
+        aria-describedby={error ? `${textareaId}-error` : undefined}
         aria-invalid={error ? true : undefined}
         {...props}
       />
-      {error && (
-        <span role="alert" className="text-[var(--pm-danger)] text-xs">
-          {error}
-        </span>
-      )}
+      {/* Slot sempre reservado (min-height: 1lh) — erro aparecendo não empurra o layout */}
+      <span
+        id={error ? `${textareaId}-error` : undefined}
+        role={error ? 'alert' : undefined}
+        className={`text-xs font-[var(--font-ui)] ${error ? 'text-[var(--color-danger-deep)]' : 'text-[var(--pm-text-2)]'}`}
+        style={{ display: 'block', minHeight: '1lh' }}
+      >
+        {error ?? ''}
+      </span>
     </div>
   );
 }

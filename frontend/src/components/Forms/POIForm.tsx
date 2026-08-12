@@ -123,7 +123,7 @@ export function POIForm({ onClose }: Props) {
                             fontFamily:    'var(--font-ui)',
                             fontWeight:    selected ? 600 : 400,
                             cursor:        'pointer',
-                            transition:    'all 0.15s ease',
+                            transition:    'background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out)',
                             whiteSpace:    'nowrap',
                           }}
                         >
@@ -148,7 +148,7 @@ export function POIForm({ onClose }: Props) {
             background:   def ? 'var(--pm-card)' : 'transparent',
             border:       def ? '1px solid var(--pm-border-bright)' : 'none',
             borderLeft:   def ? '3px solid var(--pm-accent)' : 'none',
-            transition:   'all 0.2s ease',
+            transition:   'padding var(--dur-short) var(--ease-out), background-color var(--dur-short) var(--ease-out), border-color var(--dur-short) var(--ease-out)',
             overflow:     'hidden',
           }}>
             {def && (
@@ -273,7 +273,7 @@ export function POIForm({ onClose }: Props) {
                   borderRadius: '2px',
                   background:   selectedZone.color,
                   opacity:      0.6,
-                  transition:   'background 0.2s ease',
+                  transition:   'background-color var(--dur-short) var(--ease-out)',
                 }} />
               )}
             </div>

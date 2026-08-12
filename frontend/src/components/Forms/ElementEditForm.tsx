@@ -140,7 +140,7 @@ export function ElementEditForm({ element, onClose }: Props) {
                 borderRadius: '2px',
                 background:  selectedZone.color,
                 opacity:     0.6,
-                transition:  'background 0.2s ease',
+                transition:  'background-color var(--dur-short) var(--ease-out)',
               }} />
             )}
           </div>

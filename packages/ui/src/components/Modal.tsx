@@ -11,11 +11,11 @@ export interface ModalProps {
   title?:      string;
   children:    React.ReactNode;
   maxWidth?:   string;
-  /** z-index do overlay (padrão: 2000) */
-  zIndex?:     number;
+  /** z-index do overlay (padrão: var(--z-modal)) */
+  zIndex?:     number | string;
   /** Fechar ao clicar no overlay (padrão: true) */
   closeOnOverlay?: boolean;
-  /** Exibe a barra neon verde de loading no topo do modal */
+  /** Exibe a barra de loading no topo do modal */
   loading?:    boolean;
 }
 
@@ -25,7 +25,7 @@ export function Modal({
   title,
   children,
   maxWidth = '420px',
-  zIndex   = 2000,
+  zIndex   = 'var(--z-modal)',
   closeOnOverlay = true,
   loading  = false,
 }: ModalProps) {
@@ -60,7 +60,7 @@ export function Modal({
         style={{ maxWidth }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Barra neon de loading — clipada pelo border-radius do modal */}
+        {/* Barra de loading — clipada pelo border-radius do modal */}
         {loading && <div className="pm-modal-progress" />}
         {title && (
           <h2 style={{

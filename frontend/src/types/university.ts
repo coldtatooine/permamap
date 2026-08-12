@@ -70,20 +70,6 @@ export const COURSE_CATEGORY_LABELS: Record<CourseCategory, string> = {
   sobrevivencialismo: 'Sobrevivencialismo',
 };
 
-export const COURSE_CATEGORY_COLORS: Record<CourseCategory, string> = {
-  permacultura:       '#4a7c59',
-  agrofloresta:       '#c4720a',
-  bioconstrucao:      '#7a5c3c',
-  sobrevivencialismo: '#4a5568',
-};
-
-export const COURSE_CATEGORY_EMOJIS: Record<CourseCategory, string> = {
-  permacultura:       '🌱',
-  agrofloresta:       '🌳',
-  bioconstrucao:      '🏗️',
-  sobrevivencialismo: '🧭',
-};
-
 /** Estimate reading time in minutes from HTML string (~200 wpm). */
 export function estimateReadTime(html: string | null): number {
   if (!html) return 0;

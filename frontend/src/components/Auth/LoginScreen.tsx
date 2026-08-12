@@ -43,7 +43,9 @@ export function LoginScreen({ onSwitchToRegister }: LoginScreenProps) {
             fontWeight:    700,
             color:         'var(--pm-text)',
             lineHeight:    1.25,
-            letterSpacing: '-0.02em',
+            letterSpacing: 'var(--tracking-display)',
+            overflowWrap:  'anywhere',
+            minWidth:      0,
           }}
         >
           Bem-vindo de volta
@@ -107,23 +109,7 @@ export function LoginScreen({ onSwitchToRegister }: LoginScreenProps) {
 
 function SwitchLink({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      style={{
-        background:    'none',
-        border:        'none',
-        fontFamily:    'var(--font-ui)',
-        fontSize:      '0.875rem',
-        fontWeight:    600,
-        color:         'var(--pm-accent)',
-        cursor:        'pointer',
-        padding:       0,
-        transition:    'opacity 0.15s',
-      }}
-      onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.75'; }}
-      onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; }}
-    >
+    <button type="button" onClick={onClick} className="pm-switch-link">
       {children}
     </button>
   );
