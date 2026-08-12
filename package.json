@@ -1,6 +1,19 @@
 {
-  "dependencies": {
-    "supabase": "^2.78.1",
-    "supabase-cli": "^0.0.21"
+  "name": "permamap",
+  "private": true,
+  "packageManager": "pnpm@11.20.0",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=10"
+  },
+  "scripts": {
+    "preinstall": "node -e \"const ua=process.env.npm_config_user_agent||''; if(!ua.includes('pnpm')){console.error('Este projeto usa pnpm. Execute: corepack enable && pnpm install'); process.exit(1)}\"",
+    "dev": "pnpm --filter frontend dev",
+    "build": "pnpm --filter frontend build",
+    "lint": "pnpm --filter frontend lint",
+    "preview": "pnpm --filter frontend preview"
+  },
+  "devDependencies": {
+    "supabase": "^2.78.1"
   }
 }

@@ -298,7 +298,7 @@ sidebarSlide(width)  // animação de largura
 2. Atualizar tipos em `frontend/src/types/index.ts`
 3. Atualizar hook `useProperty.ts` (SELECT e UPSERT)
 4. Atualizar store `useMapStore.ts` se houver validação de negócio
-5. Rodar `npx supabase db push`
+5. Rodar `pnpm exec supabase db push`
 
 ### Adicionando novo ElementType
 1. Adicionar ao union em `types/index.ts`
@@ -326,13 +326,13 @@ sidebarSlide(width)  // animação de largura
 
 ```bash
 # Rodar frontend
-cd frontend && npm run dev
+pnpm dev
 
 # Type check
-cd frontend && npx tsc --noEmit
+pnpm --filter frontend exec tsc --noEmit
 
 # Aplicar migrations no banco remoto
-npx supabase db push
+pnpm exec supabase db push
 
 # Checar diagnostics (IDE)
 mcp__ide__getDiagnostics

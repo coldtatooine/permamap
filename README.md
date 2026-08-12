@@ -31,8 +31,8 @@ Welcome to **Permamap**, the ultimate web app for designing and visualizing perm
 Ready to dive in? Follow these steps to get Permamap running locally:
 
 ### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
+- Node.js (v20 or higher)
+- [pnpm](https://pnpm.io) 10+ (`corepack enable`)
 - Supabase account (for the backend)
 
 ### Setup
@@ -44,28 +44,27 @@ Ready to dive in? Follow these steps to get Permamap running locally:
 
 2. **Install dependencies**:
    ```bash
-   cd frontend
-   npm install
+   pnpm install
    ```
 
 3. **Set up Supabase**:
    - Create a new project on [Supabase](https://supabase.com)
    - Run migrations:
      ```bash
-     npx supabase db push
+     pnpm exec supabase db push
      ```
    - Configure your environment variables (check `.env.example`)
 
 4. **Start the development server**:
    ```bash
-   npm run dev
+   pnpm dev
    ```
    Open [http://localhost:5173](http://localhost:5173) and start mapping!
 
 ### Building for Production
 ```bash
-npm run build
-npm run preview
+pnpm build
+pnpm preview
 ```
 
 ## 🎮 Usage
@@ -86,7 +85,7 @@ Permamap is open source and we love contributions! Whether it's bug fixes, new f
 1. Fork the repo
 2. Create a feature branch: `git checkout -b feature/amazing-idea`
 3. Make your changes and add tests
-4. Run the tests: `npm run test`
+4. Run the tests: `pnpm --filter frontend exec vitest run`
 5. Commit your changes: `git commit -m 'Add amazing feature'`
 6. Push to the branch: `git push origin feature/amazing-idea`
 7. Open a Pull Request

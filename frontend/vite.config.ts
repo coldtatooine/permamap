@@ -14,7 +14,4 @@ export default defineConfig({
       'framer-motion': resolve(__dirname, 'node_modules/framer-motion'),
     },
   },
-  test: {
-    exclude: ['**/node_modules/**', '**/e2e/**', '**/*.spec.ts'],
-  },
 })

@@ -20,11 +20,11 @@ TDD apenas para funções utilitárias de regra de negócio.
 
 **Purpose**: Novas dependências, tipos e schema de banco — necessários antes de qualquer user story.
 
-- [X] T001 Install `dompurify @types/dompurify` in `frontend/` (`npm install dompurify @types/dompurify`)
+- [X] T001 Install `dompurify @types/dompurify` in `frontend/` (`pnpm --filter frontend add dompurify @types/dompurify`)
 - [X] T002 Create `frontend/src/types/university.ts` with all university types: `CourseCategory`, `CourseStatus`, `SourceStatus`, `CuratedSource`, `Course`, `CreateSourceInput`, `UpdateSourceInput`, `GenerateCourseInput`
 - [X] T003 [P] Create `supabase/migrations/008_university_schema.sql` with full SQL from `specs/main/data-model.md` (enums, tables, indexes, RLS policies, `users.is_admin boolean NOT NULL DEFAULT false` column)
 - [X] T004 [P] Create `supabase/functions/generate-course/deno.json` with JSR import: `"@anthropic-ai/sdk": "jsr:@anthropic-ai/sdk@^0.36.0"`
-- [X] T005 Run `npx supabase db push` to apply migration 008 to the remote Supabase project
+- [X] T005 Run `pnpm exec supabase db push` to apply migration 008 to the remote Supabase project
 
 ---
 
@@ -83,7 +83,7 @@ TDD apenas para funções utilitárias de regra de negócio.
 - [X] T021 [P] [US2] Create `frontend/src/components/University/CourseViewer.tsx` — renderizador HTML seguro. `React.lazy()` + `Suspense`. Recebe `htmlContent: string`, aplica `DOMPurify.sanitize()` com allowed tags definidos no contrato, usa `dangerouslySetInnerHTML`. Exibir dentro de `.pm-modal` com botão fechar.
 - [X] T022 [US2] Integrate `CourseGenerator` and `CourseAdminList` into `UniversityAdmin.tsx` — adicionar tab "Gerar Curso" e "Meus Cursos". `CourseGenerator` dispara geração e ao concluir abre `CourseViewer` com preview. `CourseAdminList` exibe cursos existentes com ações publicar/arquivar/regenerar.
 - [X] T023 [US2] Add error handling in `CourseGenerator` for generation failure — quando `generateCourse` retorna erro: exibir mensagem de erro em pt-BR, mostrar o rascunho com status `failed` na lista, botão "Tentar novamente" chama `regenerateCourse(course_id)`.
-- [ ] T024 [US2] Deploy Edge Function: `npx supabase functions deploy generate-course` — verificar no Supabase Dashboard que a função está ativa. Adicionar secret `ANTHROPIC_API_KEY` via `npx supabase secrets set ANTHROPIC_API_KEY=<key>`.
+- [ ] T024 [US2] Deploy Edge Function: `pnpm exec supabase functions deploy generate-course` — verificar no Supabase Dashboard que a função está ativa. Adicionar secret `ANTHROPIC_API_KEY` via `pnpm exec supabase secrets set ANTHROPIC_API_KEY=<key>`.
 
 **Checkpoint**: Admin consegue gerar e publicar um curso completo. User Stories 1 + 2 funcionam de forma independente.
 
@@ -115,11 +115,11 @@ TDD apenas para funções utilitárias de regra de negócio.
 
 **Purpose**: Qualidade, performance e cobertura final.
 
-- [X] T029 [P] Lazy-load `CourseViewer` component — confirmar que `React.lazy(() => import('./CourseViewer'))` e `Suspense` estão corretos. Rodar `npm run build` e verificar que DOMPurify não está no bundle principal (`vite-bundle-visualizer`).
-- [X] T030 [P] TypeScript strict audit — rodar `npx tsc --noEmit` e corrigir qualquer erro. Verificar que `DOMPurify.sanitize()` e `isAdmin` estão tipados sem `any` implícito.
+- [X] T029 [P] Lazy-load `CourseViewer` component — confirmar que `React.lazy(() => import('./CourseViewer'))` e `Suspense` estão corretos. Rodar `pnpm build` e verificar que DOMPurify não está no bundle principal (`vite-bundle-visualizer`).
+- [X] T030 [P] TypeScript strict audit — rodar `pnpm --filter frontend exec tsc --noEmit` e corrigir qualquer erro. Verificar que `DOMPurify.sanitize()` e `isAdmin` estão tipados sem `any` implícito.
 - [X] T031 [P] Mobile responsiveness audit — abrir `UniversityView`, `SourceManager` e `CourseGenerator` em viewport 375px. Corrigir qualquer layout quebrado. Verificar modais funcionam em mobile.
 - [X] T032 [P] Loading and empty states audit — verificar todos os componentes têm: estado loading explícito (spinner ou skeleton), estado vazio com mensagem em pt-BR, estado de erro com mensagem acionável.
-- [X] T033 Run full test suite: `npx vitest run` (unit + integration) + `npx playwright test` (e2e). Todos devem passar. Corrigir falhas antes de considerar a feature completa.
+- [X] T033 Run full test suite: `pnpm --filter frontend exec vitest run` (unit + integration) + `pnpm --filter frontend exec playwright test` (e2e). Todos devem passar. Corrigir falhas antes de considerar a feature completa.
 - [ ] T034 Run quickstart.md validation — executar o happy path completo descrito em `specs/main/quickstart.md` manualmente. Confirmar todos os passos passam, incluindo marcar usuário como admin e verificar acesso ao painel.
 
 ---

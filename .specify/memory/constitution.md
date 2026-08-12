@@ -138,10 +138,10 @@ constitution amendment.
 - Every PR MUST reference a spec in `specs/###-feature-name/spec.md` or include
   an inline rationale for hotfixes.
 - Database migrations MUST be committed to `supabase/migrations/` and applied via
-  `npx supabase db push` — no manual schema changes on the remote.
+  `pnpm exec supabase db push` — no manual schema changes on the remote.
 - The `main` branch MUST always be deployable. No WIP commits to `main`.
 - All UI copy and messages MUST be written in Portuguese (pt-BR) before merging.
-- TypeScript errors (`npx tsc --noEmit`) and lint errors MUST be zero before merging.
+- TypeScript errors (`pnpm --filter frontend exec tsc --noEmit`) and lint errors MUST be zero before merging.
 
 ## Governance
 

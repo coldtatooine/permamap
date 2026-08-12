@@ -73,10 +73,11 @@ in app context, LCP ≤ 2.5s, bundle ≤ 500KB gzipped, mobile ≥ 375px.
 ## Useful Commands
 
 ```bash
-cd frontend && npm run dev          # Start dev server
-npx supabase db push                # Apply DB migrations
-npx supabase functions deploy generate-course
-cd frontend && npx tsc --noEmit    # Type check
-cd frontend && npx vitest run      # Unit tests
-cd frontend && npx playwright test # E2E tests
+pnpm install                       # Instalar dependências (raiz do workspace)
+pnpm dev                           # Start dev server
+pnpm exec supabase db push         # Apply DB migrations
+pnpm exec supabase functions deploy generate-course
+pnpm --filter frontend exec tsc --noEmit    # Type check
+pnpm --filter frontend exec vitest run      # Unit tests
+pnpm --filter frontend exec playwright test # E2E tests
 ```

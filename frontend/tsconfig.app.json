@@ -32,5 +32,6 @@
       "framer-motion": ["./node_modules/framer-motion"]
     }
   },
-  "include": ["src", "../packages/ui/src"]
+  "include": ["src", "../packages/ui/src"],
+  "exclude": ["src/tests", "**/*.test.ts", "**/*.spec.ts"]
 }

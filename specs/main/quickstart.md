@@ -5,7 +5,7 @@ Guia para configurar e validar a feature Permamap U localmente.
 ## Pré-requisitos
 
 - Node.js 20+, Deno 2+
-- Supabase CLI instalado e linkado ao projeto remoto (`npx supabase link`)
+- Supabase CLI instalado e linkado ao projeto remoto (`pnpm exec supabase link`)
 - `ANTHROPIC_API_KEY` disponível para adicionar como secret no Supabase
 
 ---
@@ -13,8 +13,7 @@ Guia para configurar e validar a feature Permamap U localmente.
 ## 1. Instalar dependências do frontend
 
 ```bash
-cd frontend
-npm install dompurify @types/dompurify
+pnpm --filter frontend add dompurify @types/dompurify
 ```
 
 ---
@@ -23,7 +22,7 @@ npm install dompurify @types/dompurify
 
 ```bash
 # Na raiz do projeto
-npx supabase db push
+pnpm exec supabase db push
 ```
 
 Confirmar que a migration `008_university_schema.sql` foi aplicada:
@@ -40,7 +39,7 @@ Confirmar que a migration `008_university_schema.sql` foi aplicada:
 mkdir -p supabase/functions/generate-course
 
 # Adicionar o secret da Anthropic
-npx supabase secrets set ANTHROPIC_API_KEY=<sua-chave>
+pnpm exec supabase secrets set ANTHROPIC_API_KEY=<sua-chave>
 ```
 
 Criar `supabase/functions/generate-course/deno.json`:
@@ -57,7 +56,7 @@ Criar `supabase/functions/generate-course/deno.json`:
 ## 4. Deploy da Edge Function
 
 ```bash
-npx supabase functions deploy generate-course
+pnpm exec supabase functions deploy generate-course
 ```
 
 ---
@@ -74,7 +73,7 @@ WHERE id = '<seu-user-id>';
 
 Ou via CLI:
 ```bash
-npx supabase sql "UPDATE public.users SET is_admin = true WHERE id = '<seu-user-id>'"
+pnpm exec supabase sql "UPDATE public.users SET is_admin = true WHERE id = '<seu-user-id>'"
 ```
 
 ---
@@ -82,8 +81,7 @@ npx supabase sql "UPDATE public.users SET is_admin = true WHERE id = '<seu-user-
 ## 6. Rodar o frontend
 
 ```bash
-cd frontend
-npm run dev
+pnpm dev
 ```
 
 ---
@@ -133,7 +131,6 @@ console.log(DOMPurify.sanitize(malicious));
 ## 9. Rodar testes
 
 ```bash
-cd frontend
-npx vitest run                    # Testes unitários (business rules)
-npx playwright test               # Testes e2e (happy path)
+pnpm --filter frontend exec vitest run       # Testes unitários (business rules)
+pnpm --filter frontend exec playwright test  # Testes e2e (happy path)
 ```

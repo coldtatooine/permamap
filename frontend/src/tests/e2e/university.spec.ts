@@ -3,7 +3,7 @@
 // =====================
 //
 // Pré-requisitos:
-// 1. Dev server rodando (npm run dev)
+// 1. Dev server rodando (pnpm dev)
 // 2. Ao menos um curso publicado no banco Supabase
 // 3. Credenciais de auth válidas no ambiente ou config de teste
 

@@ -58,5 +58,5 @@
 
 | Package | Environment | Action |
 |---------|-------------|--------|
-| `dompurify` | `frontend/` npm | ADD `npm install dompurify @types/dompurify` |
+| `dompurify` | `frontend/` pnpm | ADD `pnpm --filter frontend add dompurify @types/dompurify` |
 | `@anthropic-ai/sdk` | `supabase/functions/` Deno | ADD via `deno.json` imports (JSR) |

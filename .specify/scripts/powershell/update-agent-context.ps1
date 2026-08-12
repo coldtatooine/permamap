@@ -193,7 +193,7 @@ function Get-CommandsForLanguage {
     switch -Regex ($Lang) {
         'Python' { return "cd src; pytest; ruff check ." }
         'Rust' { return "cargo test; cargo clippy" }
-        'JavaScript|TypeScript' { return "npm test; npm run lint" }
+        'JavaScript|TypeScript' { return "pnpm test; pnpm lint" }
         default { return "# Add commands for $Lang" }
     }
 }

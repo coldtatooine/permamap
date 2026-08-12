@@ -93,7 +93,7 @@ VITE_SUPABASE_ANON_KEY=eyJ...  # chave pública, RLS protege
 git log --all -p | grep -i "service_role"
 
 # Checar bundle de produção por secrets
-cd frontend && npm run build
+pnpm build
 grep -r "service_role\|postgres://" dist/
 ```
 
@@ -209,22 +209,20 @@ add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
 ---
 
-### F. Dependências — npm audit
+### F. Dependências — pnpm audit
 
 ```bash
-cd frontend
-
 # Auditoria completa
-npm audit
+pnpm audit
 
 # Corrigir automaticamente (apenas patches seguros)
-npm audit fix
+pnpm audit --fix
 
 # Ver detalhes de um CVE específico
-npm audit --json | jq '.vulnerabilities'
+pnpm audit --json | jq '.vulnerabilities'
 
 # Atualizar dependência específica com cautela
-npm update leaflet-draw --save
+pnpm --filter frontend update leaflet-draw
 ```
 
 **Regras:**
@@ -282,8 +280,8 @@ COMMIT;
 3. Verificar que não quebrou funcionalidade adjacente
 
 ### Após a correção:
-1. Type check: `cd frontend && npx tsc --noEmit`
-2. Build: `npm run build`
+1. Type check: `pnpm --filter frontend exec tsc --noEmit`
+2. Build: `pnpm build`
 3. Verificar que a vulnerabilidade não existe mais
 4. Sugerir teste manual do fluxo afetado
 

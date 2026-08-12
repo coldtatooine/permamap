@@ -34,9 +34,11 @@ VITE_SUPABASE_ANON_KEY=sua-anon-key-aqui
 
 ## Instalação e execução
 
+Na raiz do repositório:
+
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 A aplicação estará disponível em `http://localhost:5173`.
@@ -45,9 +47,9 @@ A aplicação estará disponível em `http://localhost:5173`.
 
 | Comando | Descrição |
 | ------- | --------- |
-| `npm run dev` | Servidor de desenvolvimento com HMR |
-| `npm run build` | Build de produção em `/dist` |
-| `npm run preview` | Pré-visualização do build de produção |
+| `pnpm dev` | Servidor de desenvolvimento com HMR |
+| `pnpm build` | Build de produção em `/dist` |
+| `pnpm preview` | Pré-visualização do build de produção |
 
 ## Estrutura de pastas
 

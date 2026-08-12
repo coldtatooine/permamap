@@ -41,9 +41,9 @@ Antes de analisar vulnerabilidades, mapeie:
 | A03 | Injection | SQL via RPC Supabase; inputs de formulário → PostGIS |
 | A04 | Insecure Design | Zona 0 sem auth; propriedades sem ownership |
 | A05 | Security Misconfiguration | Supabase sem RLS ativo; CORS aberto |
-| A06 | Vulnerable Components | npm deps desatualizadas; Leaflet/leaflet-draw CVEs |
+| A06 | Vulnerable Components | pnpm deps desatualizadas; Leaflet/leaflet-draw CVEs |
 | A07 | Auth Failures | Ausência de auth no MVP; ANON KEY com acesso total |
-| A08 | Software Integrity | Supply chain npm; Vite plugins não verificados |
+| A08 | Software Integrity | Supply chain pnpm; Vite plugins não verificados |
 | A09 | Logging Failures | Ausência de auditoria de ações destrutivas |
 | A10 | SSRF | URLs de tiles do mapa; fetch de recursos externos |
 
@@ -69,7 +69,7 @@ Antes de analisar vulnerabilidades, mapeie:
 
 #### Dependências
 ```bash
-npm audit --audit-level=moderate
+pnpm audit --audit-level=moderate
 ```
 Focar em: `leaflet-draw`, `react-leaflet`, `@supabase/supabase-js`
 
@@ -97,7 +97,7 @@ git grep -i "secret\|password\|key\|token" -- ":(exclude)*.lock"
 
 ### Passo 3 — Análise de Dependências
 ```bash
-cd frontend && npm audit
+pnpm --filter frontend audit
 ```
 
 ### Passo 4 — Relatório

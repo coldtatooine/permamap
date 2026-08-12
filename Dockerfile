@@ -16,41 +16,32 @@ ARG NODE_ENV
 ENV VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
 ENV VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
 ENV NODE_ENV=${NODE_ENV}
+ENV PNPM_HOME="/pnpm"
+ENV PATH="${PNPM_HOME}:${PATH}"
+ENV CI=true
 
 # Dependências do sistema
 RUN apk add --no-cache libc6-compat git
 
-# Configurar npm
-RUN npm config set cache /tmp/npm-cache && \
-    npm config set audit false && \
-    npm config set fund false && \
-    npm config set update-notifier false
+# pnpm via Corepack (versão pinada em package.json#packageManager)
+RUN corepack enable
 
-# Copiar packages/ui primeiro (resolvido via alias no vite.config.ts)
+# Manifests primeiro — cache de dependências
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
+COPY packages/ui/package.json ./packages/ui/
+COPY frontend/package.json ./frontend/
+
+RUN pnpm install --frozen-lockfile
+
+# Código fonte
 COPY packages/ ./packages/
-
-# Copiar package.json do frontend para cache de dependências
-COPY frontend/package*.json ./frontend/
-
-# Instalar dependências do frontend
-RUN cd frontend && \
-    if [ -f package-lock.json ]; then \
-        echo "Usando package-lock.json..." && \
-        npm ci --production=false --no-audit --no-fund; \
-    else \
-        echo "package-lock.json não encontrado, usando npm install..." && \
-        npm install --production=false --no-audit --no-fund; \
-    fi
-
-# Copiar restante do código fonte do frontend
 COPY frontend/ ./frontend/
 
 # Build de produção
 ENV NODE_ENV=production
-ENV CI=true
 
 RUN echo "Iniciando build de produção..." && \
-    cd frontend && npm run build && \
+    pnpm --filter frontend build && \
     echo "Build concluído com sucesso"
 
 # ========================================
